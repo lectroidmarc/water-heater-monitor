@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Water Heater Monitor</title>
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="css/main.css" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <h1>Water Heater Monitor</h1>
+      </div>
+
+      <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist" id="tabs">
+          <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+          <li role="presentation"><a href="#update" aria-controls="settings" role="tab" data-toggle="tab">Update</a></li>
+          <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane fade in active" id="home">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="status on alert alert-success">
+                  <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                  Pump is ON
+                </div>
+                <div class="status off alert alert-info">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                  Pump is OFF
+                </div>
+                <div class="status uplim alert alert-warning">
+                  <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                  High Limit hit
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6 col-md-3">
+                <div id="aux_2_g" class="gauge"></div>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <div id="stor_t_g" class="gauge"></div>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <div id="coll_t_g" class="gauge"></div>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <div id="ambient_t_g" class="gauge"></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div id="plot" class="plot"></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="stats progress">
+                  <div class="progress-bar" role="progressbar"></div>
+                </div>
+              </div>
+           </div>
+          </div>
+
+          <div role="tabpanel" class="tab-pane fade" id="update">
+            <form role="form" id="test" class="form-horizontal formbox">
+              <div class="form-group">
+                <label for="runtime" class="col-sm-2 control-label">Runtime</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="runtime">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="coll_t" class="col-sm-2 control-label">Collector Temperature</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="coll_t">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="stor_t" class="col-sm-2 control-label">Storage Temperature</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="stor_t">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="aux_2" class="col-sm-2 control-label">Return Temperature (AUX 2)</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="aux_2">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="aux_1" class="col-sm-2 control-label">Hot Water Temperature (AUX 1)</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="aux_1">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="diff_t" class="col-sm-2 control-label">Differential Temperature</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="diff_t" value="12.0">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="hili_t" class="col-sm-2 control-label">High Limit Temperature</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="hili_t" value="160.0">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Pump</label>
+                <div class="col-sm-4">
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="pump" id="pump_on" value="ON" checked> ON
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="pump" id="pump_off" value="OFF"> OFF
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">High Limit</label>
+                <div class="col-sm-4">
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="uplim" id="uplim_on" value="ON"> ON
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="uplim" id="uplim_off" value="OFF" checked> OFF
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="ambient_t" class="col-sm-2 control-label">Ambient Temperature</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="ambient_t">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="button" id="clear_btn" class="btn btn-danger">Clear All Data</button>
+              <div class="alert alert-success result" role="alert">
+                <button type="button" class="close" data-dismiss="alert">
+                  <span aria-hidden="true">&times;</span>
+                  <span class="sr-only">Close</span>
+                </button>
+                <span></span>
+              </div>
+            </form>
+          </div>
+
+          <div role="tabpanel" class="tab-pane fade" id="settings">
+            <div class="row">
+              <div class="col-md-6">
+                <form role="form" class="formbox">
+                  <div class="form-group">
+                    <label for="phant_url">URL</label>
+                    <input type="url" class="form-control" id="phant_url" placeholder="Enter URL" value="https://data.sparkfun.com" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="phant_public_key">Public Key</label>
+                    <input type="text" class="form-control" id="phant_public_key" placeholder="Enter Public Key" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="phant_private_key">Private Key (optional)</label>
+                    <input type="text" class="form-control" id="phant_private_key" placeholder="Enter Private Key">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts-more.js"></script>
+  <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+
+  <script src="js/parameters.js"></script>
+  <script src="js/phant.js"></script>
+  <script src="js/highcharts.js"></script>
+  <script src="js/main.js"></script>
+</html>
