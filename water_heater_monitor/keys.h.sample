@@ -1,0 +1,23 @@
+/*
+ * WIFI Info
+ */
+
+#define WLAN_SSID       "YOUR_SSID"
+#define WLAN_PASS       "YOUR_PASSWORD"
+#define WLAN_SECURITY   WLAN_SEC_WPA2
+
+
+/*
+ * Phant auth tokens
+ *
+ * Output URL: https://<PHANT_HOST>:<PHANT_PORT>/output/<PHANT_PUBLIC_KEY>
+ * Manage URL: https://<PHANT_HOST>:<PHANT_PORT>/streams/<PHANT_PUBLIC_KEY>
+ */
+
+#define PHANT_HOST "data.sparkfun.com"
+#define PHANT_PORT 80
+
+#define PHANT_PUBLIC_KEY "YOUR_PUBLIC_KEY"
+#define PHANT_PRIVATE_KEY "YOUR_PRIVATE_KEY"
+#define PHANT_DELETE_KEY "YOUR_DELETE_KEY"
+
