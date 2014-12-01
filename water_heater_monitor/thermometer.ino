@@ -5,26 +5,15 @@
  */
 
 #include <Wire.h>
-#include <I2Cdev.h>
-#include <BMP085.h>
+#include <Adafruit_BMP085.h>
 
-BMP085 barometer;
+Adafruit_BMP085 barometer;
 boolean hasThermometer;
 
 boolean initThermometer () {
   Serial.print(F("Setting up BMP085 for temperature..."));
 
-  Wire.begin();
-  barometer.initialize();
-
-  if (barometer.testConnection()) {
-    // request temperature
-    barometer.setControl(BMP085_MODE_TEMPERATURE);
-
-    // wait appropriate time for conversion (4.5ms delay)
-    int32_t lastMicros = micros();
-    while (micros() - lastMicros < barometer.getMeasureDelayMicroseconds());
-
+  if (barometer.begin()) {
     Serial.println(F(" done."));
     hasThermometer = true;
   } else {
@@ -36,5 +25,5 @@ boolean initThermometer () {
 }
 
 float getTemperature () {
-  return (hasThermometer) ? barometer.getTemperatureF() : 0.0;
+  return (hasThermometer) ? barometer.readTemperature() * 9 / 5 + 32 : 0.0;
 }
