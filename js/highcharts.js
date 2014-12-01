@@ -83,7 +83,6 @@ var makeGraph = function (element, data) {
       borderWidth: 1,
       type: 'line'
     },
-    colors: ['#ebc03f', '#aed6f6', '#c94a4a', '#4da64d', '#933feb'],
     plotOptions: {
       line: {
         marker: {
@@ -106,24 +105,30 @@ var makeGraph = function (element, data) {
     },
     series: [
       {
-        name: 'Collector Temp',
-        data: getDataArray('coll_t')
+        name: 'Water Temp',
+        data: getDataArray('aux_2'),
+        color: '#4da64d'
       },
       {
         name: 'Storage Temp',
-        data: getDataArray('stor_t')
+        data: getDataArray('stor_t'),
+        color: '#aed6f6'
+      },
+      {
+        name: 'Collector Temp',
+        data: getDataArray('coll_t'),
+        color: '#ebc03f'
       },
       {
         name: 'Return Temp',
-        data: getDataArray('aux_1')
-      },
-      {
-        name: 'Water Temp',
-        data: getDataArray('aux_2')
+        data: getDataArray('aux_1'),
+        color: '#ebc03f',
+        dashStyle: 'shortdot'
       },
       {
         name: 'Ambient Temp',
-        data: getDataArray('ambient_t')
+        data: getDataArray('ambient_t'),
+        color: '#933feb'
       }
     ]
   });
