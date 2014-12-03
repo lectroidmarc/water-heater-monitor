@@ -103,7 +103,8 @@ void loop () {
 
 
 void updateWeb() {
-  Serial.println(F("Sending data... "));
+  Serial.println(F("Sending data..."));
+  Serial.println(eagle_data);
 
   client.connect(PHANT_HOST, PHANT_HOST_PORT);
   if (client.connected()) {
