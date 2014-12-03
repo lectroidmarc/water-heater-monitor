@@ -103,7 +103,7 @@ void loop () {
 
 
 void updateWeb() {
-  Serial.print(F("Sending data... "));
+  Serial.println(F("Sending data... "));
 
   client.connect(PHANT_HOST, PHANT_HOST_PORT);
   if (client.connected()) {
@@ -155,9 +155,9 @@ void updateWeb() {
     }
 
     client.close();
-    Serial.println(F(" done."));
+    Serial.println(F("Done."));
   } else {
-    Serial.println(F(" web server connection failed."));
+    Serial.println(F("Web server connection failed."));
   }
 
   data_port.flush();  // clear any data in the serial buffer we missed while sending.
