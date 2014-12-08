@@ -152,9 +152,10 @@ var makeGraph = function (element, data) {
   function getDataArray (key) {
     var returnArray = [];
     for (var x = 0; x < data.length; x++) {
+      var number = parseFloat(data[x][key]);
       returnArray.push([
         Date.parse(data[x].timestamp),
-        (data[x][key] !== "") ? parseFloat(data[x][key]) : null
+        (isNaN(number)) ? null : number
       ]);
     }
     return returnArray.reverse();
