@@ -11,6 +11,7 @@ var init = function () {
     $('#phant_url').val(saved_phant_settings.url);
     $('#phant_public_key').val(saved_phant_settings.public_key);
     $('#phant_private_key').val(saved_phant_settings.private_key);
+    $('#clear_btn').prop('disabled', !saved_phant_settings.private_key);
 
     phant = new Phant(saved_phant_settings);
 
@@ -48,6 +49,7 @@ var onSettingsSubmit = function (e) {
     private_key: $('#phant_private_key').val()
   }));
 
+  $('#clear_btn').prop('disabled', !$('#phant_private_key').val());
   $('#tabs a:first').tab('show');
 }
 
