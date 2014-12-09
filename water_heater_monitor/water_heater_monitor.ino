@@ -2,13 +2,13 @@
  * Listens for serial data from an IMC Eagle solar water heater controller and
  * uploads it to a waiting server.
  *
- * Assumes an CC3000-based wireless network connectiom shield and serial connection
- * via SoftwareSerial on pins 6 and 7.
+ * Assumes an CC3000-based wireless network connectiom shield and serial
+ * connection to athe Eagle controller via hardware serial.
  */
 
 #include <Adafruit_CC3000.h>
+#include "utility/debug.h"
 #include <SPI.h>
-#include <SoftwareSerial.h>
 
 #include "keys.h"
 
@@ -17,25 +17,24 @@
 #define ADAFRUIT_CC3000_VBAT  5
 #define ADAFRUIT_CC3000_CS    10
 
-#define IDLE_TIMEOUT_MS  3000
+#define IDLE_TIMEOUT_MS       2000
 
 Adafruit_CC3000 cc3000 = Adafruit_CC3000(ADAFRUIT_CC3000_CS, ADAFRUIT_CC3000_IRQ, ADAFRUIT_CC3000_VBAT, SPI_CLOCK_DIVIDER);
 Adafruit_CC3000_Client client;
 
-SoftwareSerial data_port(6, 7);
 unsigned long lastWebUpdateTime = 0;
 char eagle_data[81];
 uint8_t data_index = 0;
 
 
 void setup () {
-  Serial.begin(115200);
+  Serial.begin(2400);
   Serial.println(F("\nWater Heater Monitor"));
 
   // CC3000 setup
-  Serial.print(F("initializing network... "));
+  Serial.print(F("Initializing network... "));
   if (!cc3000.begin()) {
-    Serial.println(F("unable to initialise the CC3000! Check your wiring?"));
+    Serial.println(F("unable to initialise the CC3000!"));
     while(1);
   }
   if (!cc3000.connectToAP(WLAN_SSID, WLAN_PASS, WLAN_SECURITY)) {
@@ -45,24 +44,17 @@ void setup () {
   Serial.println(F("wireless connection successful."));
 
   while (!cc3000.checkDHCP()) {
-    delay(100); // TODO: Insert a DHCP timeout!
+    delay(100);
   }
 
   uint32_t ipAddress, netmask, gateway, dhcpserv, dnsserv;
-  if(!cc3000.getIPAddress(&ipAddress, &netmask, &gateway, &dhcpserv, &dnsserv)) {
+  if (!cc3000.getIPAddress(&ipAddress, &netmask, &gateway, &dhcpserv, &dnsserv)) {
     Serial.println(F("Unable to retrieve network info!"));
   } else {
-    Serial.print(F("  IP Addr: ")); cc3000.printIPdotsRev(ipAddress);
-    Serial.print(F("/"));           cc3000.printIPdotsRev(netmask);   Serial.println();
-    Serial.print(F("  Gateway: ")); cc3000.printIPdotsRev(gateway);   Serial.println();
-    Serial.print(F("  DHCPsrv: ")); cc3000.printIPdotsRev(dhcpserv);  Serial.println();
-    Serial.print(F("  DNSserv: ")); cc3000.printIPdotsRev(dnsserv);   Serial.println();
+    Serial.print(F("  IP Addr: ")); cc3000.printIPdotsRev(ipAddress); Serial.println();
   }
 
   initThermometer();
-
-  // Data port setup
-  data_port.begin(2400);
 
   Serial.println(F("Waiting for data..."));
 }
@@ -73,19 +65,27 @@ void loop () {
 
   // If we haven't updated in 5 minutes, send along a "PING" to keep showing something.
   if (now > lastWebUpdateTime + 300000 || now < lastWebUpdateTime) {
+    //strcpy(eagle_data, "0.05  120.0  110.0  12.0  159.0  100.0  110.0  ON  OFF  ");
+    //updateWeb();
+
     data_index = 0;
     eagle_data[data_index] = '\0';
     updateWeb();
   }
+}
 
-  if (data_port.available()) {
-    char c = data_port.read();
+
+void serialEvent() {
+  while (Serial.available()) {
+    char c = Serial.read();
     if (c) UDR0 = c;
 
     // Assume a LF is the end of the line
     if (c == '\n' && strlen(eagle_data) > 0) {
       // Update once per minute
       // Also, don't send any Eagle header messages we come across.
+      unsigned long now = millis();
+
       if ((now > lastWebUpdateTime + 60000 || now < lastWebUpdateTime) && strncmp(eagle_data, "RUNTIME", 7) != 0) {
         updateWeb();
       }
@@ -95,7 +95,12 @@ void loop () {
       eagle_data[data_index] = '\0';
     } else if (c != '\r') {
       // Capture everything else (but not a CR)
-      eagle_data[data_index++] = c;
+      if (data_index < 80) {
+        eagle_data[data_index++] = c;
+      } else {
+        // This case should never happen, but avoid the overrun just the same :)
+        data_index = 0;
+      }
       eagle_data[data_index] = '\0';
     }
   }
@@ -104,46 +109,48 @@ void loop () {
 
 void updateWeb() {
   Serial.println(F("Sending data..."));
-  Serial.println(eagle_data);
+
+  // The Adafruit CC3000 library only supports about 90 bytes in the fastrprint()
+  // method, therefore we need two char arrays to hold all the Eagle query args.
+  char eagle_query_args1[66] = "&runtime=0:00&coll_t=&stor_t=&diff_t=&hili_t=";
+  char eagle_query_args2[66] = "&aux_1=&aux_2=&pump=OFF&uplim=OFF&fault=";
+
+  if (strlen(eagle_data) > 0) {
+    char *tokenptr;
+
+    sprintf(eagle_query_args1, "&runtime=%s&coll_t=%s&stor_t=%s&diff_t=%s&hili_t=%s",
+      strtok_r(eagle_data, " ", &tokenptr),
+      strtok_r(NULL, " ", &tokenptr),
+      strtok_r(NULL, " ", &tokenptr),
+      strtok_r(NULL, " ", &tokenptr),
+      strtok_r(NULL, " ", &tokenptr)
+    );
+
+    sprintf(eagle_query_args2, "&aux_1=%s&aux_2=%s&pump=%s&uplim=%s&fault=%s",
+      strtok_r(NULL, " ", &tokenptr),
+      strtok_r(NULL, " ", &tokenptr),
+      strtok_r(NULL, " ", &tokenptr),
+      strtok_r(NULL, " ", &tokenptr),
+      strtok_r(NULL, " ", &tokenptr)
+    );
+  }
+
+  // Convert the temerature float to something fastrprint likes
+  char temp_str[7]; // "123.45"
+  dtostrf(getTemperature(), 1, 2, temp_str);
 
   client.connect(PHANT_HOST, PHANT_HOST_PORT);
   if (client.connected()) {
-    lastWebUpdateTime = millis();
-
-    // Convert the temerature float to something fastrprint likes
-    char temp_str[7]; // "123.45"
-    dtostrf(getTemperature(), 1, 2, temp_str);
-
     client.fastrprint(F("GET /input/")); client.fastrprint(PHANT_PUBLIC_KEY);
     client.fastrprint(F("?private_key=")); client.fastrprint(PHANT_PRIVATE_KEY);
+    client.fastrprint(eagle_query_args1);
+    client.fastrprint(eagle_query_args2);
     client.fastrprint(F("&ambient_t=")); client.fastrprint(temp_str);
-
-    if (strlen(eagle_data) == 0) {
-      client.fastrprint(F("&runtime=0:00&coll_t=&stor_t=&diff_t=&hili_t=&aux_1=&aux_2=&pump=OFF&uplim=OFF&fault="));
-    } else {
-      char *tokenptr;
-
-      client.fastrprint(F("&runtime=")); client.fastrprint(strtok_r(eagle_data, " ", &tokenptr));
-      client.fastrprint(F("&coll_t=")); client.fastrprint(strtok_r(NULL, " ", &tokenptr));
-      client.fastrprint(F("&stor_t=")); client.fastrprint(strtok_r(NULL, " ", &tokenptr));
-      client.fastrprint(F("&diff_t=")); client.fastrprint(strtok_r(NULL, " ", &tokenptr));
-      client.fastrprint(F("&hili_t=")); client.fastrprint(strtok_r(NULL, " ", &tokenptr));
-      client.fastrprint(F("&aux_1=")); client.fastrprint(strtok_r(NULL, " ", &tokenptr));
-      client.fastrprint(F("&aux_2=")); client.fastrprint(strtok_r(NULL, " ", &tokenptr));
-      client.fastrprint(F("&pump=")); client.fastrprint(strtok_r(NULL, " ", &tokenptr));
-      client.fastrprint(F("&uplim=")); client.fastrprint(strtok_r(NULL, " ", &tokenptr));
-
-      // fault can be null and fastrprint pukes on NULL
-      client.fastrprint(F("&fault="));
-      char *fault = strtok_r(NULL, " ", &tokenptr);
-      if (fault != NULL) {
-        client.fastrprint(fault);
-      }
-    }
-    client.fastrprintln(F(" HTTP/1.1"));
+    client.fastrprint(F(" HTTP/1.1\r\n"));
 
     client.fastrprint(F("Host: ")); client.fastrprintln(PHANT_HOST);
-    client.fastrprintln("");
+
+    client.fastrprint("\r\n");
 
     // Show the response
     unsigned long lastRead = millis();
@@ -156,10 +163,9 @@ void updateWeb() {
     }
 
     client.close();
+    lastWebUpdateTime = millis();
     Serial.println(F("Done."));
   } else {
     Serial.println(F("Web server connection failed."));
   }
-
-  data_port.flush();  // clear any data in the serial buffer we missed while sending.
 }
