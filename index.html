@@ -28,12 +28,16 @@
         <div class="tab-content">
           <div role="tabpanel" class="tab-pane fade in active" id="home">
             <div class="row">
-              <div class="col-md-4">
-                <div class="status on alert alert-success">
+              <div class="col-md-12">
+                <div class="status systemoff alert alert-danger">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                  System is OFF
+                </div>
+                <div class="status pumpon alert alert-success">
                   <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                   Pump is ON
                 </div>
-                <div class="status off alert alert-info">
+                <div class="status pumpoff alert alert-info">
                   <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                   Pump is OFF
                 </div>
@@ -45,13 +49,13 @@
             </div>
 
             <div class="row">
-              <div class="col-sm-6 col-md-3">
+              <div class="col-sm-6 col-md-3 hidden-xs-systemoff">
                 <div id="aux_2_g" class="gauge"></div>
               </div>
-              <div class="col-sm-6 col-md-3">
+              <div class="col-sm-6 col-md-3 hidden-xs-systemoff">
                 <div id="stor_t_g" class="gauge"></div>
               </div>
-              <div class="col-sm-6 col-md-3">
+              <div class="col-sm-6 col-md-3 hidden-xs-systemoff">
                 <div id="coll_t_g" class="gauge"></div>
               </div>
               <div class="col-sm-6 col-md-3">

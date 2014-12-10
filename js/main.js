@@ -5,6 +5,11 @@
 var phant;
 
 var init = function () {
+  $('a[data-toggle="tab"]').on('shown.bs.tab', onTabChange);
+  $('#settings form').on('submit', onSettingsSubmit);
+  $('#update').on('submit', onUpdateSubmit);
+  $('#clear_btn').on('click', onClear);
+
   var saved_phant_settings = JSON.parse(window.localStorage.getItem('phant_settings'));
 
   if (saved_phant_settings) {
@@ -19,7 +24,7 @@ var init = function () {
       page: 1
     }, onPhantFetch);
 
-    //phant.enableRealtime(onPhantUpdate);
+    //phant.enableRealtime(onPhantRealtime);
 
     phant.getStats(onPhantStats);
   } else {
@@ -60,14 +65,23 @@ var onPhantFetch = function (data) {
     console.warn(data.message);
   } else {
     var current = data[0];
+    var system_is_off = (current.coll_t === '' && current.stor_t === '' && current.aux_1 === '' && current.aux_2 === '') ? true : false;
 
     $('.status').hide();
-    if (current.uplim == 'ON') {
+    if (system_is_off) {
+      $('.status.systemoff').show();
+    } else if (current.uplim == 'ON') {
       $('.status.uplim').show();
     } else if (current.pump == 'ON') {
-      $('.status.on').show();
+      $('.status.pumpon').show();
     } else {
-      $('.status.off').show();
+      $('.status.pumpoff').show();
+    }
+
+    if (system_is_off) {
+      $('.hidden-xs-systemoff').addClass('off');
+    } else {
+      $('.hidden-xs-systemoff').removeClass('off');
     }
 
     makeTempGuage('#aux_2_g', (current.aux_2 !== "") ? parseFloat(current.aux_2) : 0, 'Water Temperature');
@@ -86,7 +100,7 @@ var onPhantFetch = function (data) {
   }
 };
 
-var onPhantUpdate = function (data) {
+var onPhantRealtime = function (data) {
   console.log(data);
 }
 
@@ -99,7 +113,7 @@ var onPhantStats = function (data) {
   $('.stats').show();
 }
 
-var onSubmit = function (e) {
+var onUpdateSubmit = function (e) {
   e.preventDefault();
 
   if (phant) {
@@ -117,17 +131,11 @@ var onSubmit = function (e) {
       fault: ''
     };
 
-    phant.update(params, onPhantSubmitted);
+    phant.update(params, onPhantUpdateSubmitted);
   }
 };
 
-var onClear = function (e) {
-  phant.clear(function (data) {
-    $('#tabs a:first').tab('show');
-  });
-};
-
-var onPhantSubmitted = function (data) {
+var onPhantUpdateSubmitted = function (data) {
   if (data.success) {
     $('#update .result > span').text('Successfully updated ' + phant.url);
     $('#update .result').removeClass('alert-danger').addClass('alert-success').show();
@@ -137,8 +145,10 @@ var onPhantSubmitted = function (data) {
   }
 };
 
+var onClear = function (e) {
+  phant.clear(function (data) {
+    $('#tabs a:first').tab('show');
+  });
+};
+
 $(document).ready(init);
-$('#settings form').on('submit', onSettingsSubmit);
-$('a[data-toggle="tab"]').on('shown.bs.tab', onTabChange);
-$('#update').on('submit', onSubmit);
-$('#clear_btn').on('click', onClear);
