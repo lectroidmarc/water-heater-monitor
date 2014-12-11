@@ -65,10 +65,16 @@ var onPhantFetch = function (data) {
     console.warn(data.message);
   } else {
     var current = data[0];
+    var last_update_timestamp = Date.parse(current.timestamp);
+    var out_of_date = (Date.now() - last_update_timestamp > 10 * 60 * 1000) ? true : false;
     var system_is_off = (current.coll_t === '' && current.stor_t === '' && current.aux_1 === '' && current.aux_2 === '') ? true : false;
 
     $('.status').hide();
-    if (system_is_off) {
+    if (out_of_date) {
+      var last_update = new Date(last_update_timestamp)
+      $('#last_update_time').text(last_update.toLocaleString());
+      $('.status.outofdate').show();
+    } else if (system_is_off) {
       $('.status.systemoff').show();
     } else if (current.uplim == 'ON') {
       $('.status.uplim').show();

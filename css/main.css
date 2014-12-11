@@ -38,6 +38,12 @@
   margin: 10px 0 0 0;
 }
 
+.alert-gray {
+  color: #606060;
+  background-color: #f0f0f0;
+  border-color: #d0d0d0;
+}
+
 @media (max-width: 767px) {
   .hidden-xs-systemoff.off {
     display: none !important;
