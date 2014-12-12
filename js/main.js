@@ -113,8 +113,11 @@ var onPhantRealtime = function (data) {
 var onPhantStats = function (data) {
   //console.log(data);
 
+  var percentage = data.used / data.cap * 100;
+
+  $('.stats').attr('title', percentage.toFixed(2) + '% space used.');
   $('.stats .progress-bar').css({
-    width: String(data.used / data.cap) + '%'
+    width: percentage.toFixed(2) + '%'
   });
   $('.stats').show();
 }
