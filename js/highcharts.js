@@ -158,11 +158,24 @@ var makeGraph = function (element, data) {
   function getDataArray (key) {
     var returnArray = [];
     for (var x = 0; x < data.length; x++) {
+      var timestamp = Date.parse(data[x].timestamp);
       var number = parseFloat(data[x][key]);
+
       returnArray.push([
-        Date.parse(data[x].timestamp),
+        timestamp,
         (isNaN(number)) ? null : number
       ]);
+
+      // Block out sections where there appears to be an outage
+      if (x < data.length - 1) {
+        var next_timestamp = Date.parse(data[x+1].timestamp);
+        if (timestamp > next_timestamp + 11 * 60 * 1000) { // max 10 minute interval
+          returnArray.push([
+            Date.parse((timestamp + next_timestamp) / 2),
+            null
+          ]);
+        }
+      }
     }
     return returnArray.reverse();
   }

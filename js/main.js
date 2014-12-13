@@ -66,7 +66,7 @@ var onPhantFetch = function (data) {
   } else {
     var current = data[0];
     var last_update_timestamp = Date.parse(current.timestamp);
-    var out_of_date = (Date.now() - last_update_timestamp > 10 * 60 * 1000) ? true : false;
+    var out_of_date = (Date.now() - last_update_timestamp > 11 * 60 * 1000) ? true : false; // max 10 minute interval
     var system_is_off = (current.coll_t === '' && current.stor_t === '' && current.aux_1 === '' && current.aux_2 === '') ? true : false;
 
     $('.status').hide();
