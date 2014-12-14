@@ -83,10 +83,14 @@ void serialEvent() {
     // Assume a LF is the end of the line
     if (c == '\n' && strlen(eagle_data) > 0) {
       // Update once per minute
-      // Also, don't send any Eagle header messages we come across.
+      //
+      // Don't send any Eagle header messages we come across.  Also, make sure
+      // there's a : character in the string. It's always the 2nd or 3rd
+      // character so it goes a long way in assuming we have a full set of data.
+
       unsigned long now = millis();
 
-      if ((now > lastWebUpdateTime + 60000 || now < lastWebUpdateTime) && strncmp(eagle_data, "RUNTIME", 7) != 0) {
+      if ((now > lastWebUpdateTime + 60000 || now < lastWebUpdateTime) && strncmp(eagle_data, "RUNTIME", 7) != 0 && strchr(eagle_data, ':') != NULL) {
         updateWeb();
       }
 
