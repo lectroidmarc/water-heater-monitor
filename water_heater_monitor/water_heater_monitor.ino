@@ -37,15 +37,8 @@ void setup () {
     Serial.println(F("unable to initialise the CC3000!"));
     while(1);
   }
-  if (!cc3000.connectToAP(WLAN_SSID, WLAN_PASS, WLAN_SECURITY)) {
-    Serial.println(F("wireless connection failed!"));
-    while(1);
-  }
-  Serial.println(F("wireless connection successful."));
 
-  while (!cc3000.checkDHCP()) {
-    delay(100);
-  }
+  reconnectToAP();
 
   uint32_t ipAddress, netmask, gateway, dhcpserv, dnsserv;
   if (!cc3000.getIPAddress(&ipAddress, &netmask, &gateway, &dhcpserv, &dnsserv)) {
@@ -111,6 +104,21 @@ void serialEvent() {
 }
 
 
+void reconnectToAP () {
+  while (!cc3000.checkConnected()) {
+    if (cc3000.connectToAP(WLAN_SSID, WLAN_PASS, WLAN_SECURITY)) {
+      Serial.println(F("AP connection successful."));
+      while (!cc3000.checkDHCP()) {
+        delay(100);
+      }
+    } else {
+      Serial.println(F("AP connection failure... attempting to reconnect..."));
+      delay(30000);
+    }
+  }
+}
+
+
 void updateWeb() {
   Serial.println(F("Sending data..."));
 
@@ -171,5 +179,9 @@ void updateWeb() {
     Serial.println(F("Done."));
   } else {
     Serial.println(F("Web server connection failed."));
+    if (!cc3000.checkConnected()) {
+      Serial.println(F("Wifi appears down, attempting to reconnect..."));
+      reconnectToAP();
+    }
   }
 }
