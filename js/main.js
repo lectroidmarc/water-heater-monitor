@@ -21,8 +21,15 @@ var init = function () {
     phant = new Phant(saved_phant_settings);
 
     phant.fetch({
-      page: 1
-    }, onPhantFetch);
+      page: 2
+    }, function (data2) {
+      phant.fetch({
+        page: 1
+      }, function (data1) {
+        Array.prototype.push.apply(data1, data2)
+        onPhantFetch(data1);
+      });
+    });
 
     //phant.enableRealtime(onPhantRealtime);
 
