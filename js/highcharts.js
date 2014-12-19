@@ -142,13 +142,18 @@ var makeGraph = function (element, data) {
   function getPlotBands () {
     var returnArray = [];
 
-    for (var x = 0; x < data.length; x++) {
+    for (var x = data.length - 1; x >= 0; x--) {
       if (x > 0 && (data[x].pump == 'ON' || data[x].uplim == 'ON')) {
-        returnArray.push({
-          color: (data[x].pump == 'ON') ? 'aliceblue' : '#ffeedd',
-          from: Date.parse(data[x-1].timestamp),
-          to: Date.parse(data[x].timestamp)
-        });
+        var timestamp = Date.parse(data[x].timestamp);
+        var next_timestamp = Date.parse(data[x-1].timestamp);
+
+        if (next_timestamp - timestamp < 11 * 60 * 1000) { // max 10 minute interval
+          returnArray.push({
+            color: (data[x].pump == 'ON') ? 'aliceblue' : '#ffeedd',
+            from: timestamp,
+            to: next_timestamp
+          });
+        }
       }
     }
 
@@ -157,7 +162,8 @@ var makeGraph = function (element, data) {
 
   function getDataArray (key) {
     var returnArray = [];
-    for (var x = 0; x < data.length; x++) {
+
+    for (var x = data.length - 1; x >= 0; x--) {
       var timestamp = Date.parse(data[x].timestamp);
       var number = parseFloat(data[x][key]);
 
@@ -167,9 +173,10 @@ var makeGraph = function (element, data) {
       ]);
 
       // Block out sections where there appears to be an outage
-      if (x < data.length - 1) {
-        var next_timestamp = Date.parse(data[x+1].timestamp);
-        if (timestamp > next_timestamp + 11 * 60 * 1000) { // max 10 minute interval
+      if (x > 0) {
+        var next_timestamp = Date.parse(data[x-1].timestamp);
+
+        if (next_timestamp - timestamp > 11 * 60 * 1000) { // max 10 minute interval
           returnArray.push([
             Date.parse((timestamp + next_timestamp) / 2),
             null
@@ -177,6 +184,7 @@ var makeGraph = function (element, data) {
         }
       }
     }
-    return returnArray.reverse();
+
+    return returnArray;
   }
 };
