@@ -129,7 +129,6 @@ var onPhantStats = function (data) {
   $('.stats .progress-bar').css({
     width: percentage.toFixed(2) + '%'
   });
-  $('.stats').show();
 }
 
 var onUpdateSubmit = function (e) {
