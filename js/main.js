@@ -24,7 +24,7 @@ var init = function () {
   } else {
     $('#tabs a:last').tab('show');
   }
-}
+};
 
 var fetchAll = function () {
   phant.fetch({
@@ -33,7 +33,7 @@ var fetchAll = function () {
     phant.fetch({
       page: 1
     }, function (data1) {
-      Array.prototype.push.apply(data1, data2)
+      Array.prototype.push.apply(data1, data2);
       onPhantFetch(data1);
     });
   });
@@ -66,7 +66,7 @@ var onSettingsSubmit = function (e) {
 
   $('#clear_btn').prop('disabled', !$('#phant_private_key').val());
   $('#tabs a:first').tab('show');
-}
+};
 
 var onPhantFetch = function (data) {
   //console.log(data);
@@ -81,7 +81,7 @@ var onPhantFetch = function (data) {
 
     $('.status').hide();
     if (out_of_date) {
-      var last_update = new Date(last_update_timestamp)
+      var last_update = new Date(last_update_timestamp);
       $('#last_update_time').text(last_update.toLocaleString());
       $('.status.outofdate').show();
     } else if (system_is_off) {
@@ -118,7 +118,7 @@ var onPhantFetch = function (data) {
 
 var onPhantRealtime = function (data) {
   console.log(data);
-}
+};
 
 var onPhantStats = function (data) {
   //console.log(data);
@@ -129,7 +129,7 @@ var onPhantStats = function (data) {
   $('.stats .progress-bar').css({
     width: percentage.toFixed(2) + '%'
   });
-}
+};
 
 var onUpdateSubmit = function (e) {
   e.preventDefault();
