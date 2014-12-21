@@ -1,0 +1,15 @@
+{
+  "name": "water-heater-monitor",
+  "version": "1.0.0",
+  "description": "Just another website",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/lectroidmarc/water-heater-monitor.git"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-uglify": "^0.6.0",
+    "grunt-contrib-watch": "^0.6.0"
+  },
+  "license": "BSD"
+}
