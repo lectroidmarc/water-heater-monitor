@@ -1,5 +1,6 @@
 module.exports = function(grunt) {
   grunt.initConfig({
+    js_files: ['js/*.js', '!js/*.min.js'],
     uglify: {
       options: {
         sourceMap: true,
@@ -7,13 +8,18 @@ module.exports = function(grunt) {
       },
       scripts: {
         files: {
-          'js/main.min.js': ['js/*.js', '!js/*.min.js']
+          'js/main.min.js': ['<%= js_files %>']
         }
       }
     },
+    jshint: {
+      options: {
+      },
+      files: ['Gruntfile.js', '<%= js_files %>']
+    },
     watch: {
       scripts: {
-        files: ['js/*.js', '!js/*.min.js'],
+        files: ['<%= js_files %>'],
         tasks: ['dist']
       },
       other: {
@@ -26,8 +32,9 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('dist', ['uglify']);
+  grunt.registerTask('dist', ['jshint', 'uglify']);
   grunt.registerTask('default', ['watch']);
 };
