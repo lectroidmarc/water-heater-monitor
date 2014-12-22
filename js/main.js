@@ -29,15 +29,8 @@ var init = function () {
 
 var fetchAll = function () {
   phant.fetch({
-    page: 2
-  }, function (data2) {
-    phant.fetch({
-      page: 1
-    }, function (data1) {
-      Array.prototype.push.apply(data1, data2);
-      onPhantFetch(data1);
-    });
-  });
+    'gte[timestamp]': 't - 18h'
+  }, onPhantFetch);
 
   //phant.enableRealtime(onPhantRealtime);
   setTimeout(fetchAll, 90000);
