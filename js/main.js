@@ -1,5 +1,6 @@
 /**
- *
+ * @file Contains the main functions supporting the Water Heater Monitor
+ * web page.
  */
 
 var phant;

@@ -1,5 +1,5 @@
 /**
- *
+ * @file Contains code specific to implementing Highcharts charts.
  */
 
 Highcharts.setOptions({

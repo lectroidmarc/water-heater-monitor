@@ -1,13 +1,24 @@
 /**
- *
+ * @file Contains the Phant class.
+ * @version 1.0.0
  */
 
+/**
+ * Creates a Phant object.
+ * @param {Phant~settings} settings - Initial setings used to create the object.
+ * @class
+ */
 var Phant = function (settings) {
   this.url = settings.url;
   this.public_key = settings.public_key;
   this.private_key = settings.private_key;
 };
 
+/**
+ * Fetches data from a Phant server.
+ * @param {Object} params - An object contaning phant parameters.
+ * @param {Phant~requestCallback} callback - A callback to call after the Phant call is done.
+ */
 Phant.prototype.fetch = function (params, callback) {
   var parameters = new Parameters(params);
 
@@ -20,6 +31,11 @@ Phant.prototype.fetch = function (params, callback) {
   xhr.send();
 };
 
+/**
+ * Sends data to the Phant server.
+ * @param {Object} params - An object contaning phant parameters.
+ * @param {Phant~requestCallback} callback - A callback to call after the Phant call is done.
+ */
 Phant.prototype.update = function (params, callback) {
   var parameters = new Parameters(params);
 
@@ -33,6 +49,11 @@ Phant.prototype.update = function (params, callback) {
   xhr.send(parameters.formData());
 };
 
+/**
+ * Erases all the data on the Phant server.
+ * @param {Object} params - An object contaning phant parameters.
+ * @param {Phant~requestCallback} callback - A callback to call after the Phant call is done.
+ */
 Phant.prototype.clear = function (callback) {
   var xhr = new XMLHttpRequest();
   xhr.open('DELETE', this.url + '/input/' + this.public_key + '.json');
@@ -44,6 +65,11 @@ Phant.prototype.clear = function (callback) {
   xhr.send();
 };
 
+/**
+ * Get Phant stats.
+ * @param {Object} params - An object contaning phant parameters.
+ * @param {Phant~requestCallback} callback - A callback to call after the Phant call is done.
+ */
 Phant.prototype.getStats = function (callback) {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', this.url + '/output/' + this.public_key + '/stats.json');
@@ -54,6 +80,11 @@ Phant.prototype.getStats = function (callback) {
   xhr.send();
 };
 
+/**
+ * Enables real time udpates via Web Sockets.
+ * @param {Object} params - An object contaning phant parameters.
+ * @param {Phant~requestCallback} callback - A callback to call after the Phant call is done.
+ */
 Phant.prototype.enableRealtime = function (callback) {
   var self = this;
 
@@ -73,3 +104,17 @@ Phant.prototype.enableRealtime = function (callback) {
 
   document.body.appendChild(script);
 };
+
+/**
+ * Phant settings options.
+ * @typedef {Object} Phant~settings
+ * @property {string} url - The URL of the Phant server.
+ * @property {string} public_key - The public key to use on the Phant server.
+ * @property {string} [private_key] - The private key to use on the Phant server.
+ */
+
+/**
+ * Callback called with the Phant server response data.
+ * @callback Phant~requestCallback
+ * @param {Object} data - The response data from the Phant server
+ */

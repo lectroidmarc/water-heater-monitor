@@ -28,12 +28,19 @@ module.exports = function(grunt) {
         },
         files: ['index.html', 'css/main.css', 'js/*.min.js']
       }
+    },
+    jsdoc: {
+      dist: {
+        src: ['<%= js_files %>'],
+        dest: 'jsdoc'
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-jsdoc');
 
   grunt.registerTask('dist', ['jshint', 'uglify']);
   grunt.registerTask('default', ['watch']);
