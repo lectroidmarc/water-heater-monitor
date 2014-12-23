@@ -29,7 +29,7 @@ var init = function () {
 
 var fetchAll = function () {
   phant.fetch({
-    'gte[timestamp]': 't - 18h'
+    'gte[timestamp]': 't - 12h'
   }, onPhantFetch);
 
   //phant.enableRealtime(onPhantRealtime);
