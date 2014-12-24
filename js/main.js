@@ -68,10 +68,10 @@ var onPhantFetch = function (data) {
     makeTempGauges(current);
 
     makeGraph('#plot', data);
-  }
 
-  //phant.enableRealtime(onPhantRealtime);
-  phant.startPolling({}, onPhantPolled);
+    //phant.enableRealtime(onPhantRealtime);
+    phant.startPolling({}, onPhantPolled);
+  }
 };
 
 var onPhantRealtime = function (data) {
