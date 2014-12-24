@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Phant Tests</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-1.16.0.css">
+  </head>
+  <body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+
+    <script src="https://code.jquery.com/qunit/qunit-1.16.0.js"></script>
+
+    <script src="../js/parameters.js"></script>
+    <script src="../js/phant.js"></script>
+
+    <script>
+      var phant = new Phant({
+        url: 'https://data.sparkfun.com',
+        public_key: 'v0QrAGMWbzTJggVq38vl',
+        private_key: 'aP0a7lAkKpTl227YPrB9'
+      });
+
+      var test_params = {
+        temperature: 100,
+        humidity: 100
+      };
+
+      var test_params2 = {
+        temperature: 50,
+        humidity: 50
+      };
+
+      QUnit.test("Clear Data", function (assert) {
+        var done = assert.async();
+
+        phant.clear(function (data) {
+          assert.ok(data.success, 'Data cleared');
+          done();
+        });
+      });
+
+      QUnit.test("Add Data", function (assert) {
+        var done = assert.async();
+
+        phant.update(test_params, function (data) {
+          assert.ok(data.success, 'Data added');
+          done();
+        });
+      });
+
+      QUnit.test("Fetch Data", function (assert) {
+        var done = assert.async();
+
+        phant.fetch({}, function (data) {
+          assert.equal( data.length, 1, 'Retrieved 1 record');
+          assert.equal( data[0].temperature, test_params.temperature, 'Retrieved Temperature');
+          assert.equal( data[0].humidity, test_params.humidity, 'Retrieved Humidity');
+          done();
+        });
+      });
+
+      QUnit.test("Get Stats", function (assert) {
+        var done = assert.async();
+
+        phant.getStats(function (data) {
+          assert.equal(data.remaining + data.used, data.cap, 'Stats data adds up');
+          done();
+        });
+      });
+
+      QUnit.test("Polling", function (assert) {
+        var done = assert.async();
+
+        phant.startPolling({}, function (data) {
+          phant.stopPolling();
+          assert.equal( data.length, 1, 'Retrieved 1 record');
+          assert.equal( data[0].temperature, test_params2.temperature, 'Retrieved Temperature');
+          assert.equal( data[0].humidity, test_params2.humidity, 'Retrieved Humidity');
+          done();
+        }, 2000);
+
+        phant.update(test_params2, function (data) {});
+      });
+    </script>
+  </body>
+</html>
