@@ -1,6 +1,6 @@
 /**
  * @file Contains the Phant class.
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 /**
@@ -20,12 +20,16 @@ var Phant = function (settings) {
  * @param {Phant~requestCallback} callback - A callback to call after the Phant call is done.
  */
 Phant.prototype.fetch = function (params, callback) {
+  var self = this;
   var parameters = new Parameters(params);
 
   var xhr = new XMLHttpRequest();
   xhr.open('GET', this.url + '/output/' + this.public_key + '.json?' + parameters.serialize());
   xhr.responseType = 'json';
   xhr.onload = function (e) {
+    if (Array.isArray(this.response) && this.response.length > 0) {
+      self._current_data_timestamp = this.response[0].timestamp;
+    }
     callback(this.response);
   };
   xhr.send();
@@ -81,7 +85,7 @@ Phant.prototype.getStats = function (callback) {
 };
 
 /**
- * Enables real time udpates via Web Sockets.
+ * Enables real time updates via Web Sockets.
  * @param {Object} params - An object contaning phant parameters.
  * @param {Phant~requestCallback} callback - A callback to call after the Phant call is done.
  */
@@ -103,6 +107,37 @@ Phant.prototype.enableRealtime = function (callback) {
   };
 
   document.body.appendChild(script);
+};
+
+/**
+ * Starts polling for updates.  Useful if web sockets aren't available.
+ * @param {Object} params - An object contaning phant parameters.
+ * @param {Phant~requestCallback} callback - A callback to call after the Phant call is done.
+ * @param {number} [interval] - The polling interval (defaults to 60 seconds.
+ */
+Phant.prototype.startPolling = function (params, callback, interval) {
+  var self = this;
+
+  this._poll_timeout = window.setTimeout(function () {
+    if (self._current_data_timestamp) {
+      var filtered_params = params || {};
+      filtered_params['gt[timestamp]'] = self._current_data_timestamp;
+
+      self.fetch(filtered_params, function (data) {
+        self.startPolling(params, callback, interval);
+        callback(data);
+      });
+    } else {
+      self.startPolling(params, callback, interval);
+    }
+  }, interval || 60000);
+};
+
+/**
+ * Stops polling.
+ */
+Phant.prototype.stopPolling = function () {
+  window.clearTimeout(this._poll_timeout);
 };
 
 /**

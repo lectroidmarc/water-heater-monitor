@@ -8,7 +8,14 @@ Highcharts.setOptions({
   }
 });
 
-var makeTempGuage = function (element, value, title, max) {
+var makeTempGauges = function (current) {
+  makeTempGauge('#aux_2_g', (current.aux_2 !== "") ? parseFloat(current.aux_2) : 0, 'Water Temperature');
+  makeTempGauge('#stor_t_g', (current.stor_t !== "") ? parseFloat(current.stor_t) : 0, 'Storage Temperature');
+  makeTempGauge('#coll_t_g', (current.coll_t !== "") ? parseFloat(current.coll_t) : 0, 'Collector Temperature', 250);
+  makeTempGauge('#ambient_t_g', parseFloat(current.ambient_t), 'Ambient Temperature', 140);
+};
+
+var makeTempGauge = function (element, value, title, max) {
   max = max || 200;
 
   $(element).highcharts({
@@ -167,6 +174,10 @@ var makeGraph = function (element, data) {
       var timestamp = Date.parse(data[x].timestamp);
       var number = parseFloat(data[x][key]);
 
+      if (key === 'pump' || key === 'uplim') {
+        number = (data[x][key] === 'ON') ? 1 : 0;
+      }
+
       returnArray.push([
         timestamp,
         (isNaN(number)) ? null : number
@@ -186,5 +197,27 @@ var makeGraph = function (element, data) {
     }
 
     return returnArray;
+  }
+};
+
+var updateGraph = function (element, data) {
+  var chart = $(element).highcharts();
+
+  for (var x = data.length - 1; x >= 0; x--) {
+    chart.series[0].addPoint(getDataAndTimestamp('aux_2', x), true, true);
+    chart.series[1].addPoint(getDataAndTimestamp('stor_t', x), true, true);
+    chart.series[2].addPoint(getDataAndTimestamp('coll_t', x), true, true);
+    chart.series[3].addPoint(getDataAndTimestamp('aux_1', x), true, true);
+    chart.series[4].addPoint(getDataAndTimestamp('ambient_t', x), true, true);
+  }
+
+  function getDataAndTimestamp (key, index) {
+    var timestamp = Date.parse(data[index].timestamp);
+    var number = parseFloat(data[index][key]);
+
+    return [
+      timestamp,
+      (isNaN(number)) ? null : number
+    ];
   }
 };

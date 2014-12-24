@@ -20,20 +20,13 @@ var init = function () {
     $('#clear_btn').prop('disabled', !saved_phant_settings.private_key);
 
     phant = new Phant(saved_phant_settings);
-    fetchAll();
+    phant.fetch({
+      'gte[timestamp]': 't - 12h'
+    }, onPhantFetch);
     phant.getStats(onPhantStats);
   } else {
     $('#tabs a:last').tab('show');
   }
-};
-
-var fetchAll = function () {
-  phant.fetch({
-    'gte[timestamp]': 't - 12h'
-  }, onPhantFetch);
-
-  //phant.enableRealtime(onPhantRealtime);
-  setTimeout(fetchAll, 90000);
 };
 
 var onTabChange = function (e) {
@@ -69,49 +62,36 @@ var onPhantFetch = function (data) {
     console.warn(data.message);
   } else {
     var current = data[0];
-    var last_update_timestamp = Date.parse(current.timestamp);
-    var out_of_date = (Date.now() - last_update_timestamp > 11 * 60 * 1000) ? true : false; // max 10 minute interval
-    var system_is_off = (current.coll_t === '' && current.stor_t === '' && current.aux_1 === '' && current.aux_2 === '') ? true : false;
 
-    $('.status').hide();
-    if (out_of_date) {
-      var last_update = new Date(last_update_timestamp);
-      $('#last_update_time').text(last_update.toLocaleString());
-      $('.status.outofdate').show();
-    } else if (system_is_off) {
-      $('.status.systemoff').show();
-    } else if (current.uplim == 'ON') {
-      $('.status.uplim').show();
-    } else if (current.pump == 'ON') {
-      $('.status.pumpon').show();
-    } else {
-      $('.status.pumpoff').show();
-    }
-
-    if (system_is_off) {
-      $('.hidden-xs-systemoff').addClass('off');
-    } else {
-      $('.hidden-xs-systemoff').removeClass('off');
-    }
-
-    makeTempGuage('#aux_2_g', (current.aux_2 !== "") ? parseFloat(current.aux_2) : 0, 'Water Temperature');
-    makeTempGuage('#stor_t_g', (current.stor_t !== "") ? parseFloat(current.stor_t) : 0, 'Storage Temperature');
-    makeTempGuage('#coll_t_g', (current.coll_t !== "") ? parseFloat(current.coll_t) : 0, 'Collector Temperature', 250);
-    makeTempGuage('#ambient_t_g', parseFloat(current.ambient_t), 'Ambient Temperature', 140);
+    showStatus(current);
+    updateFormValues(current);
+    makeTempGauges(current);
 
     makeGraph('#plot', data);
-
-    $('#runtime').val(current.runtime);
-    $('#coll_t').val(current.coll_t);
-    $('#stor_t').val(current.stor_t);
-    $('#aux_1').val(current.aux_1);
-    $('#aux_2').val(current.aux_2);
-    $('#ambient_t').val(current.ambient_t);
   }
+
+  //phant.enableRealtime(onPhantRealtime);
+  phant.startPolling({}, onPhantPolled);
 };
 
 var onPhantRealtime = function (data) {
   console.log(data);
+};
+
+var onPhantPolled = function (data) {
+  //console.log(data);
+
+  if (data.message) {
+    console.warn(data.message);
+  } else if (data.length > 0) {
+    var current = data[0];
+
+    showStatus(current);
+    updateFormValues(current);
+    makeTempGauges(current);
+
+    updateGraph('#plot', data);
+  }
 };
 
 var onPhantStats = function (data) {
@@ -161,6 +141,42 @@ var onClear = function (e) {
   phant.clear(function (data) {
     $('#tabs a:first').tab('show');
   });
+};
+
+var showStatus = function (current) {
+  var last_update_timestamp = Date.parse(current.timestamp);
+  var out_of_date = (Date.now() - last_update_timestamp > 11 * 60 * 1000) ? true : false; // max 10 minute interval
+  var system_is_off = (current.coll_t === '' && current.stor_t === '' && current.aux_1 === '' && current.aux_2 === '') ? true : false;
+
+  $('.status').hide();
+  if (out_of_date) {
+    var last_update = new Date(last_update_timestamp);
+    $('#last_update_time').text(last_update.toLocaleString());
+    $('.status.outofdate').show();
+  } else if (system_is_off) {
+    $('.status.systemoff').show();
+  } else if (current.uplim == 'ON') {
+    $('.status.uplim').show();
+  } else if (current.pump == 'ON') {
+    $('.status.pumpon').show();
+  } else {
+    $('.status.pumpoff').show();
+  }
+
+  if (system_is_off) {
+    $('.hidden-xs-systemoff').addClass('off');
+  } else {
+    $('.hidden-xs-systemoff').removeClass('off');
+  }
+};
+
+var updateFormValues = function (current) {
+  $('#runtime').val(current.runtime);
+  $('#coll_t').val(current.coll_t);
+  $('#stor_t').val(current.stor_t);
+  $('#aux_1').val(current.aux_1);
+  $('#aux_2').val(current.aux_2);
+  $('#ambient_t').val(current.ambient_t);
 };
 
 $(document).ready(init);
