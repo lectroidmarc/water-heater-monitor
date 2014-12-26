@@ -23,18 +23,24 @@ module.exports = function(grunt) {
         curly: true,
         eqeqeq: true,
         newcap: true,
-        quotmark: 'single',
-        undef: true,
-        globals: {
-          Highcharts: true,
-          mows: true
-        },
-        browser: true,
-        devel: true,
-        jquery: true,
-        node: true
+        quotmark: 'single'
       },
-      files: ['Gruntfile.js', 'js/main.concat.js']
+      beforeconcat: {
+        src: ['Gruntfile.js', '<%= js_files %>']
+      },
+      afterconcat: {
+        options: {
+          undef: true,
+          globals: {
+            Highcharts: true,
+            mows: true
+          },
+          browser: true,
+          devel: true,
+          jquery: true
+        },
+        src: ['js/main.concat.js']
+      }
     },
     watch: {
       scripts: {
