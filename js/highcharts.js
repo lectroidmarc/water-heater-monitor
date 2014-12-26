@@ -142,6 +142,18 @@ var makeGraph = function (element, data) {
         data: getDataArray('ambient_t'),
         color: '#933feb',
         zIndex: 1
+      },
+      {
+        name: 'Pump Status',
+        data: getDataArray('pump'),
+        showInLegend: false,
+        visible: false
+      },
+      {
+        name: 'Upper Limit Status',
+        data: getDataArray('uplim'),
+        showInLegend: false,
+        visible: false
       }
     ]
   });
@@ -209,6 +221,21 @@ var updateGraph = function (element, data) {
     chart.series[2].addPoint(getDataAndTimestamp('coll_t', x), true, true);
     chart.series[3].addPoint(getDataAndTimestamp('aux_1', x), true, true);
     chart.series[4].addPoint(getDataAndTimestamp('ambient_t', x), true, true);
+
+    var last_timestamp = chart.series[5].points[chart.series[5].points.length - 1].x;
+    var last_pump_status = chart.series[5].points[chart.series[5].points.length - 1].y;
+    var last_uplim_status = chart.series[6].points[chart.series[6].points.length - 1].y;
+
+    if (last_pump_status === 1 || last_uplim_status === 1) {
+      chart.xAxis[0].addPlotBand({
+        from: last_timestamp,
+        to: Date.parse(data[x].timestamp),
+        color: (last_pump_point.y === 1) ? 'aliceblue' : '#ffeedd',
+      });
+    }
+
+    chart.series[5].addPoint(getDataAndTimestamp('pump', x), true, true);
+    chart.series[6].addPoint(getDataAndTimestamp('uplim', x), true, true);
   }
 
   function getDataAndTimestamp (key, index) {
