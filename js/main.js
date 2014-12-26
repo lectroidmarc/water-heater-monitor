@@ -155,9 +155,9 @@ var showStatus = function (current) {
     $('.status.outofdate').show();
   } else if (system_is_off) {
     $('.status.systemoff').show();
-  } else if (current.uplim == 'ON') {
+  } else if (current.uplim === 'ON') {
     $('.status.uplim').show();
-  } else if (current.pump == 'ON') {
+  } else if (current.pump === 'ON') {
     $('.status.pumpon').show();
   } else {
     $('.status.pumpoff').show();

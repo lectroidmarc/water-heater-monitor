@@ -9,9 +9,9 @@ Highcharts.setOptions({
 });
 
 var makeTempGauges = function (current) {
-  makeTempGauge('#aux_2_g', (current.aux_2 !== "") ? parseFloat(current.aux_2) : 0, 'Water Temperature');
-  makeTempGauge('#stor_t_g', (current.stor_t !== "") ? parseFloat(current.stor_t) : 0, 'Storage Temperature');
-  makeTempGauge('#coll_t_g', (current.coll_t !== "") ? parseFloat(current.coll_t) : 0, 'Collector Temperature', 250);
+  makeTempGauge('#aux_2_g', (current.aux_2 !== '') ? parseFloat(current.aux_2) : 0, 'Water Temperature');
+  makeTempGauge('#stor_t_g', (current.stor_t !== '') ? parseFloat(current.stor_t) : 0, 'Storage Temperature');
+  makeTempGauge('#coll_t_g', (current.coll_t !== '') ? parseFloat(current.coll_t) : 0, 'Collector Temperature', 250);
   makeTempGauge('#ambient_t_g', parseFloat(current.ambient_t), 'Ambient Temperature', 140);
 };
 
@@ -162,13 +162,13 @@ var makeGraph = function (element, data) {
     var returnArray = [];
 
     for (var x = data.length - 1; x >= 0; x--) {
-      if (x > 0 && (data[x].pump == 'ON' || data[x].uplim == 'ON')) {
+      if (x > 0 && (data[x].pump === 'ON' || data[x].uplim === 'ON')) {
         var timestamp = Date.parse(data[x].timestamp);
         var next_timestamp = Date.parse(data[x-1].timestamp);
 
         if (next_timestamp - timestamp < 11 * 60 * 1000) { // max 10 minute interval
           returnArray.push({
-            color: (data[x].pump == 'ON') ? 'aliceblue' : '#ffeedd',
+            color: (data[x].pump === 'ON') ? 'aliceblue' : '#ffeedd',
             from: timestamp,
             to: next_timestamp
           });

@@ -30,11 +30,11 @@ Parameters.prototype.serialize = function () {
 
   for (var x in this.params) {
     if (this.params.hasOwnProperty(x)) {
-      array.push(encodeURIComponent(x) + "=" + encodeURIComponent(this.params[x]));
+      array.push(encodeURIComponent(x) + '=' + encodeURIComponent(this.params[x]));
     }
   }
 
-  return array.join("&");
+  return array.join('&');
 };
 
 /**
