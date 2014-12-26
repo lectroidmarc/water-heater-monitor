@@ -34,7 +34,7 @@ var onTabChange = function (e) {
     case '#home':
       init();
       break;
-    case'#settings':
+    case'#update':
       break;
     case'#settings':
       $('#update .result').hide();
