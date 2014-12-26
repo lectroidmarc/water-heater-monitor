@@ -230,7 +230,7 @@ var updateGraph = function (element, data) {
       chart.xAxis[0].addPlotBand({
         from: last_timestamp,
         to: Date.parse(data[x].timestamp),
-        color: (last_pump_point.y === 1) ? 'aliceblue' : '#ffeedd',
+        color: (last_pump_status === 1) ? 'aliceblue' : '#ffeedd',
       });
     }
 
