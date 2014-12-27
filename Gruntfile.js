@@ -1,16 +1,15 @@
 module.exports = function(grunt) {
   grunt.initConfig({
-    js_files: ['js/*.js', '!js/*.concat.js', '!js/*.min.js'],
+    js_files: ['src/js/*.js'],
     concat: {
       dist: {
         src: ['<%= js_files %>'],
-        dest: 'js/main.concat.js'
+        dest: 'build/main.concat.js'
       }
     },
     uglify: {
       options: {
-        sourceMap: true,
-        sourceMapName: 'js/sourcemap.map'
+        sourceMap: true
       },
       scripts: {
         files: {
@@ -39,7 +38,7 @@ module.exports = function(grunt) {
           devel: true,
           jquery: true
         },
-        src: ['js/main.concat.js']
+        src: ['<%= concat.dist.dest %>']
       }
     },
     watch: {

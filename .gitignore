@@ -1,5 +1,5 @@
 keys.h
-node_modules
 npm-debug.log
-jsdoc
-*.concat.js
+build/
+jsdoc/
+node_modules/
