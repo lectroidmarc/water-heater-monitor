@@ -16,4 +16,4 @@ I use a [Phant](https://github.com/sparkfun/phant) based data store to store the
 
 ##### The Graphs
 
-Speaking of graphs, the page at [http://lectroid.github.io/water-heater-monitor](http://lectroid.github.io/water-heater-monitor) uses [Highcharts](http://www.highcharts.com/) to display the data.  Of course you'll need your own Phant keys to access your own data.
+Speaking of graphs, the page at [https://lectroidmarc.github.io/water-heater-monitor](https://lectroidmarc.github.io/water-heater-monitor) uses [Highcharts](http://www.highcharts.com/) to display the data.  Of course you'll need your own Phant keys to access your own data.
