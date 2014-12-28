@@ -68,6 +68,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jsdoc');
 
   grunt.registerTask('dist', ['hintify', 'uglify']);
-  grunt.registerTask('hintify', ['concat', 'jshint']);
+  grunt.registerTask('hintify', ['jshint:beforeconcat', 'concat', 'jshint:afterconcat']);
   grunt.registerTask('default', ['watch']);
 };
