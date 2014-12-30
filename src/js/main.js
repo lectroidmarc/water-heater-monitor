@@ -4,6 +4,7 @@
  */
 
 var phant;
+var wu;
 
 var init = function () {
   $('a[data-toggle="tab"]').on('shown.bs.tab', onTabChange);
@@ -11,6 +12,11 @@ var init = function () {
   $('#update').on('submit', onUpdateSubmit);
   $('#clear_btn').on('click', onClear);
 
+  init_phant();
+  init_weather();
+};
+
+var init_phant = function () {
   var saved_phant_settings = JSON.parse(window.localStorage.getItem('phant_settings'));
 
   if (saved_phant_settings) {
@@ -29,10 +35,25 @@ var init = function () {
   }
 };
 
+var init_weather = function () {
+  var saved_wu_settings = JSON.parse(window.localStorage.getItem('wu_settings'));
+  if (saved_wu_settings) {
+    $('#wu_api_key').val(saved_wu_settings.api_key);
+    $('#wu_location').val(saved_wu_settings.location);
+
+    wu = new WeatherUnderground({
+      api_key: saved_wu_settings.api_key,
+      location: saved_wu_settings.location
+    });
+    wu.conditions(onWeatherConditions);
+  }
+};
+
 var onTabChange = function (e) {
   switch ($(e.target).attr('href')) {
     case '#home':
-      init();
+      init_phant();
+      init_weather();
       break;
     case'#update':
       break;
@@ -49,6 +70,11 @@ var onSettingsSubmit = function (e) {
     url: $('#phant_url').val(),
     public_key: $('#phant_public_key').val(),
     private_key: $('#phant_private_key').val()
+  }));
+
+  window.localStorage.setItem('wu_settings', JSON.stringify({
+    api_key: $('#wu_api_key').val(),
+    location: $('#wu_location').val()
   }));
 
   $('#clear_btn').prop('disabled', !$('#phant_private_key').val());
@@ -74,9 +100,9 @@ var onPhantFetch = function (data) {
   }
 };
 
-var onPhantRealtime = function (data) {
-  console.log(data);
-};
+//var onPhantRealtime = function (data) {
+//  console.log(data);
+//};
 
 var onPhantPolled = function (data) {
   //console.log(data);
@@ -91,6 +117,10 @@ var onPhantPolled = function (data) {
     makeTempGauges(current);
 
     updateGraph('#plot', data);
+
+    if (wu) {
+      wu.conditions(onWeatherConditions);
+    }
   }
 };
 
@@ -177,6 +207,19 @@ var updateFormValues = function (current) {
   $('#aux_1').val(current.aux_1);
   $('#aux_2').val(current.aux_2);
   $('#ambient_t').val(current.ambient_t);
+};
+
+var onWeatherConditions = function (data) {
+  //console.log(data);
+
+  if (!data.response.error) {
+    var temp_f = data.current_observation.temp_f;
+    var weather = data.current_observation.weather;
+    var icon_url = data.current_observation.icon_url;
+    var forecast_url = data.current_observation.forecast_url;
+
+    $('#weather').attr('href', forecast_url).attr('title', 'Currently: ' + weather + ', ' + temp_f + '°').show().find('img').attr('src', icon_url);
+  }
 };
 
 $(document).ready(init);
