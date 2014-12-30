@@ -26,7 +26,6 @@
       <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist" id="tabs">
           <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-          <li role="presentation"><a href="#update" aria-controls="settings" role="tab" data-toggle="tab">Update</a></li>
           <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
         </ul>
 
@@ -91,121 +90,27 @@
            </div>
           </div>
 
-          <div role="tabpanel" class="tab-pane fade" id="update">
-            <form role="form" id="test" class="form-horizontal formbox">
-              <div class="form-group">
-                <label for="runtime" class="col-sm-2 control-label">Runtime</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="runtime">
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="coll_t" class="col-sm-2 control-label">Collector Temperature</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="coll_t">
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="stor_t" class="col-sm-2 control-label">Storage Temperature</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="stor_t">
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="aux_2" class="col-sm-2 control-label">Return Temperature (AUX 2)</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="aux_2">
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="aux_1" class="col-sm-2 control-label">Hot Water Temperature (AUX 1)</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="aux_1">
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="diff_t" class="col-sm-2 control-label">Differential Temperature</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="diff_t" value="12.0">
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="hili_t" class="col-sm-2 control-label">High Limit Temperature</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="hili_t" value="160.0">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">Pump</label>
-                <div class="col-sm-4">
-                  <div class="radio">
-                    <label>
-                      <input type="radio" name="pump" id="pump_on" value="ON" checked> ON
-                    </label>
-                  </div>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" name="pump" id="pump_off" value="OFF"> OFF
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">High Limit</label>
-                <div class="col-sm-4">
-                  <div class="radio">
-                    <label>
-                      <input type="radio" name="uplim" id="uplim_on" value="ON"> ON
-                    </label>
-                  </div>
-                  <div class="radio">
-                    <label>
-                      <input type="radio" name="uplim" id="uplim_off" value="OFF" checked> OFF
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="ambient_t" class="col-sm-2 control-label">Ambient Temperature</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="ambient_t">
-                </div>
-              </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
-              <button type="button" id="clear_btn" class="btn btn-danger" disabled>Clear All Data</button>
-              <div class="alert alert-success result" role="alert">
-                <button type="button" class="close" data-dismiss="alert">
-                  <span aria-hidden="true">&times;</span>
-                  <span class="sr-only">Close</span>
-                </button>
-                <span></span>
-              </div>
-            </form>
-          </div>
-
           <div role="tabpanel" class="tab-pane fade" id="settings">
             <div class="row">
               <div class="col-md-6">
                 <form role="form" class="formbox">
                   <div class="form-group">
-                    <label for="phant_url">URL</label>
+                    <label for="phant_url">Phant URL</label>
                     <input type="url" class="form-control" id="phant_url" placeholder="Enter URL" value="https://data.sparkfun.com" required>
                   </div>
                   <div class="form-group">
-                    <label for="phant_public_key">Public Key</label>
+                    <label for="phant_public_key">Phant Public Key</label>
                     <input type="text" class="form-control" id="phant_public_key" placeholder="Enter Public Key" required>
                   </div>
-                  <div class="form-group">
-                    <label for="phant_private_key">Private Key (optional)</label>
-                    <input type="text" class="form-control" id="phant_private_key" placeholder="Enter Private Key">
-                  </div>
+
                   <hr/>
+
                   <div class="form-group">
                     <label for="phant_private_key">Weather Underground API Key (optional)</label>
                     <input type="text" class="form-control" id="wu_api_key" placeholder="API Key">
                   </div>
                   <div class="form-group">
-                    <label for="phant_private_key">Weather Underground location (optional)</label>
+                    <label for="phant_private_key">Weather Underground Location (optional)</label>
                     <input type="text" class="form-control" id="wu_location" placeholder="ex: San Francisco">
                   </div>
                   <button type="submit" class="btn btn-primary">Submit</button>

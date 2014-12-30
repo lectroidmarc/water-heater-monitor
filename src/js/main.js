@@ -9,8 +9,6 @@ var wu;
 var init = function () {
   $('a[data-toggle="tab"]').on('shown.bs.tab', onTabChange);
   $('#settings form').on('submit', onSettingsSubmit);
-  $('#update').on('submit', onUpdateSubmit);
-  $('#clear_btn').on('click', onClear);
 
   init_phant();
   init_weather();
@@ -22,8 +20,6 @@ var init_phant = function () {
   if (saved_phant_settings) {
     $('#phant_url').val(saved_phant_settings.url);
     $('#phant_public_key').val(saved_phant_settings.public_key);
-    $('#phant_private_key').val(saved_phant_settings.private_key);
-    $('#clear_btn').prop('disabled', !saved_phant_settings.private_key);
 
     phant = new Phant(saved_phant_settings);
     phant.fetch({
@@ -68,8 +64,7 @@ var onSettingsSubmit = function (e) {
 
   window.localStorage.setItem('phant_settings', JSON.stringify({
     url: $('#phant_url').val(),
-    public_key: $('#phant_public_key').val(),
-    private_key: $('#phant_private_key').val()
+    public_key: $('#phant_public_key').val()
   }));
 
   window.localStorage.setItem('wu_settings', JSON.stringify({
@@ -77,7 +72,6 @@ var onSettingsSubmit = function (e) {
     location: $('#wu_location').val()
   }));
 
-  $('#clear_btn').prop('disabled', !$('#phant_private_key').val());
   $('#tabs a:first').tab('show');
 };
 
@@ -90,9 +84,7 @@ var onPhantFetch = function (data) {
     var current = data[0];
 
     showStatus(current);
-    updateFormValues(current);
     makeTempGauges(current);
-
     makeGraph('#plot', data);
 
     //phant.enableRealtime(onPhantRealtime);
@@ -113,9 +105,7 @@ var onPhantPolled = function (data) {
     var current = data[0];
 
     showStatus(current);
-    updateFormValues(current);
     makeTempGauges(current);
-
     updateGraph('#plot', data);
 
     if (wu) {
@@ -132,44 +122,6 @@ var onPhantStats = function (data) {
   $('.stats').attr('title', percentage.toFixed(2) + '% space used.');
   $('.stats .progress-bar').css({
     width: percentage.toFixed(2) + '%'
-  });
-};
-
-var onUpdateSubmit = function (e) {
-  e.preventDefault();
-
-  if (phant) {
-    var params = {
-      runtime: $('#runtime').val(),
-      coll_t: $('#coll_t').val(),
-      stor_t: $('#stor_t').val(),
-      aux_1: $('#aux_1').val(),
-      aux_2: $('#aux_2').val(),
-      diff_t: $('#diff_t').val(),
-      hili_t: $('#hili_t').val(),
-      pump: $('#update input[name=pump]:checked').val(),
-      uplim: $('#update input[name=uplim]:checked').val(),
-      ambient_t: $('#ambient_t').val(),
-      fault: ''
-    };
-
-    phant.update(params, onPhantUpdateSubmitted);
-  }
-};
-
-var onPhantUpdateSubmitted = function (data) {
-  if (data.success) {
-    $('#update .result > span').text('Successfully updated ' + phant.url);
-    $('#update .result').removeClass('alert-danger').addClass('alert-success').show();
-  } else {
-    $('#update .result > span').text(data.message);
-    $('#update .result').removeClass('alert-success').addClass('alert-danger').show();
-  }
-};
-
-var onClear = function (e) {
-  phant.clear(function (data) {
-    $('#tabs a:first').tab('show');
   });
 };
 
@@ -198,15 +150,6 @@ var showStatus = function (current) {
   } else {
     $('.hidden-xs-systemoff').removeClass('off');
   }
-};
-
-var updateFormValues = function (current) {
-  $('#runtime').val(current.runtime);
-  $('#coll_t').val(current.coll_t);
-  $('#stor_t').val(current.stor_t);
-  $('#aux_1').val(current.aux_1);
-  $('#aux_2').val(current.aux_2);
-  $('#ambient_t').val(current.ambient_t);
 };
 
 var onWeatherConditions = function (data) {
