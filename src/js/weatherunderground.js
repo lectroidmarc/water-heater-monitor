@@ -29,7 +29,7 @@ WeatherUnderground.prototype._wuAPI = function (method, callback) {
   }
 
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'http://api.wunderground.com/api/' + this.api_key + '/' + method + '/q/' + this.location + '.json');
+  xhr.open('GET', 'https://api.wunderground.com/api/' + this.api_key + '/' + method + '/q/' + this.location + '.json');
   xhr.responseType = 'json';
   xhr.onload = function (e) {
     if (cache_seconds > 0) {
