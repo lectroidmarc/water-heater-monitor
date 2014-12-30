@@ -109,7 +109,21 @@ var makeGraph = function (element, data) {
     yAxis: {
       title: {
         text: 'Temperature (°F)'
-      }
+      },
+      plotLines: [
+        {
+          color: '#aaa',
+          dashStyle: 'LongDash',
+          value: 120,
+          width: '1'
+        },
+        {
+          color: 'red',
+          dashStyle: 'LongDash',
+          value: 160,
+          width: '1'
+        }
+      ]
     },
     series: [
       {
