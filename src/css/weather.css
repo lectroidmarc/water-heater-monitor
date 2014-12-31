@@ -1,0 +1,73 @@
+/**
+ * Styles for implementing the Weather Underground 'k' iconset from a local
+ * spritesheet.
+ *
+ * Renders them in a 25px box instead of the native 50px.
+ */
+
+.weather-icon {
+  background-image: url(../images/weather_icons.png);
+  background-repeat: no-repeat;
+  background-position: -110px -75px;  /* blank */
+  background-size: 140px 105px;
+  height: 25px;
+  width: 25px;
+}
+.weather-icon.chanceflurries,
+.weather-icon.chancesnow,
+.weather-icon.flurries,
+.weather-icon.snow,
+.weather-icon.nt_chanceflurries,
+.weather-icon.nt_chancesnow,
+.weather-icon.nt_flurries,
+.weather-icon.nt_snow {
+  background-position: -5px -5px;
+}
+.weather-icon.chancerain,
+.weather-icon.rain,
+.weather-icon.nt_chancerain,
+.weather-icon.nt_rain {
+  background-position: -40px -5px;
+}
+.weather-icon.chancesleet,
+.weather-icon.sleet,
+.weather-icon.nt_chancesleet,
+.weather-icon.nt_sleet {
+  background-position: -75px -5px;
+}
+.weather-icon.chancetstorms,
+.weather-icon.tstorms,
+.weather-icon.nt_chancetstorms,
+.weather-icon.nt_tstorms {
+  background-position: -5px -40px;
+}
+.weather-icon.clear,
+.weather-icon.sunny {
+  background-position: -40px -40px;
+}
+.weather-icon.nt_clear,
+.weather-icon.nt_sunny {
+  background-position: -75px -75px;
+}
+.weather-icon.cloudy,
+.weather-icon.nt_cloudy {
+  background-position: -75px -40px;
+}
+.weather-icon.fog,
+.weather-icon.hazy,
+.weather-icon.nt_fog,
+.weather-icon.nt_hazy {
+  background-position: -5px -75px;
+}
+.weather-icon.mostlycloudy,
+.weather-icon.mostlysunny,
+.weather-icon.partlycloudy,
+.weather-icon.partlysunny {
+  background-position: -40px -75px;
+}
+.weather-icon.nt_mostlycloudy,
+.weather-icon.nt_mostlysunny,
+.weather-icon.nt_partlycloudy,
+.weather-icon.nt_partlysunny {
+  background-position: -110px -5px;
+}

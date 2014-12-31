@@ -158,10 +158,13 @@ var onWeatherConditions = function (data) {
   if (!data.response.error) {
     var temp_f = data.current_observation.temp_f;
     var weather = data.current_observation.weather;
-    var icon_url = data.current_observation.icon_url;
     var forecast_url = data.current_observation.forecast_url;
 
-    $('#weather').attr('href', forecast_url).attr('title', 'Currently: ' + weather + ', ' + temp_f + '°').show().find('img').attr('src', icon_url);
+    var icon = data.current_observation.icon;
+    var icon_url = data.current_observation.icon_url;
+    var nt = (icon_url.indexOf('nt_' + icon + '.') !== -1) ? 'nt_' : '';
+
+    $('#weather').attr('href', forecast_url).attr('title', 'Currently: ' + weather + ', ' + temp_f + '°').find('div').removeClass().addClass('weather-icon ' + nt + icon);
   }
 };
 
