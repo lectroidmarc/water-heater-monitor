@@ -164,7 +164,9 @@ var onWeatherConditions = function (data) {
     var icon_url = data.current_observation.icon_url;
     var nt = (icon_url.indexOf('nt_' + icon + '.') !== -1) ? 'nt_' : '';
 
-    $('#weather').attr('href', forecast_url).attr('title', 'Currently: ' + weather + ', ' + temp_f + '°').find('div').removeClass().addClass('weather-icon ' + nt + icon);
+    $('#weather').attr('href', forecast_url).attr('title', 'Currently: ' + weather + ', ' + temp_f + '°');
+    $('#weather .weather-icon').removeClass().addClass('weather-icon ' + nt + icon);
+    $('#weather .temp').text(temp_f + '°');
   }
 };
 

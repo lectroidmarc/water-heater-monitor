@@ -50,5 +50,8 @@
 
 #weather {
   float: right;
-  opacity: 0.6;
+  text-decoration: none;
+}
+#weather div {
+  display: inline-block;
 }

@@ -10,7 +10,9 @@
   background-repeat: no-repeat;
   background-position: -110px -75px;  /* blank */
   background-size: 140px 105px;
+  opacity: 0.6;
   height: 25px;
+  vertical-align: middle;
   width: 25px;
 }
 .weather-icon.chanceflurries,
