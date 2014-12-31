@@ -49,11 +49,6 @@
 }
 
 #weather {
-  display: none;
   float: right;
   opacity: 0.6;
-}
-#weather img {
-  height: 25px;
-  width: 25px;
 }
