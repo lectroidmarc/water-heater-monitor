@@ -22,6 +22,7 @@ module.exports = function(grunt) {
       options: {
         curly: true,
         eqeqeq: true,
+        esnext: true,
         newcap: true,
         quotmark: 'single'
       },
