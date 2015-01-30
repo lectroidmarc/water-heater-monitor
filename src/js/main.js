@@ -81,14 +81,18 @@ var onPhantFetch = function (data) {
   if (data.message) {
     console.warn(data.message);
   } else {
-    var current = data[0];
+    if (data.length > 0) {
+      var current = data[0];
 
-    showStatus(current);
-    makeTempGauges(current);
-    makeGraph('#plot', data);
+      showStatus(current);
+      makeTempGauges(current);
+      makeGraph('#plot', data);
 
-    //phant.enableRealtime(onPhantRealtime);
-    phant.startPolling({}, onPhantPolled);
+      //phant.enableRealtime(onPhantRealtime);
+      phant.startPolling({}, onPhantPolled);
+    } else {
+      $('.status').hide();
+    }
   }
 };
 
