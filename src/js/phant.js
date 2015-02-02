@@ -18,8 +18,9 @@ var Phant = function (settings) {
  * Fetches data from a Phant server.
  * @param {Object} params - An object contaning phant parameters.
  * @param {Phant~requestCallback} callback - A callback to call after the Phant call is done.
+ * @param {Phant~requestCallback} callback - A callback to call if there is an error.
  */
-Phant.prototype.fetch = function (params, callback) {
+Phant.prototype.fetch = function (params, callback, errorCallback) {
   var self = this;
   var parameters = new Parameters(params);
 
@@ -31,6 +32,11 @@ Phant.prototype.fetch = function (params, callback) {
       self._current_data_timestamp = this.response[0].timestamp;
     }
     callback(this.response);
+  };
+  xhr.onerror = function (e) {
+    if (typeof errorCallback === 'function') {
+      errorCallback();
+    }
   };
   xhr.send();
 };

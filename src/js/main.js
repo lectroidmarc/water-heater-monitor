@@ -24,7 +24,7 @@ var init_phant = function () {
     phant = new Phant(saved_phant_settings);
     phant.fetch({
       'gte[timestamp]': 't - 12h'
-    }, onPhantFetch);
+    }, onPhantFetch, onPhantError);
     phant.getStats(onPhantStats);
   } else {
     $('#tabs a:last').tab('show');
@@ -79,7 +79,9 @@ var onPhantFetch = function (data) {
   //console.log(data);
 
   if (data.message) {
-    console.warn(data.message);
+    $('.status').hide();
+    $('#error_message').text(data.message);
+    $('.status.unknown').show();
   } else {
     if (data.length > 0) {
       var current = data[0];
@@ -94,6 +96,11 @@ var onPhantFetch = function (data) {
       $('.status').hide();
     }
   }
+};
+
+var onPhantError = function (req) {
+  $('.status').hide();
+  $('.status.unknown').show();
 };
 
 //var onPhantRealtime = function (data) {
