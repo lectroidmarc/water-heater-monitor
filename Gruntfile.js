@@ -66,6 +66,13 @@ module.exports = function(grunt) {
         files: ['index.html', 'css/main.min.css', 'js/main.min.js']
       }
     },
+    connect: {
+      server: {
+        options: {
+          livereload: true
+        }
+      }
+    },
     jsdoc: {
       dist: {
         src: ['<%= js_files %>'],
@@ -79,10 +86,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-jsdoc');
 
   grunt.registerTask('hintify', ['jshint:beforeconcat', 'concat:scripts', 'jshint:afterconcat']);
   grunt.registerTask('jsdist', ['hintify', 'uglify']);
   grunt.registerTask('dist', ['jsdist', 'cssmin']);
-  grunt.registerTask('default', ['watch']);
+  grunt.registerTask('default', ['connect', 'watch']);
 };
