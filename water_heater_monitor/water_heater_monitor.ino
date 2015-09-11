@@ -36,6 +36,9 @@ void loop () {
     postToPhant();
   }
 
+  // Delays allow the ESP8266 to perform critical tasks
+  // defined outside of the sketch. These tasks include
+  // setting up, and maintaining, a WiFi connection.
   delay(100);
 }
 
