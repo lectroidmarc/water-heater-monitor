@@ -1,1 +1,5 @@
 keys.h
+build/
+jsdoc/
+node_modules/
+npm-debug.log
