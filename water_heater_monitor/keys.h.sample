@@ -2,10 +2,8 @@
  * WIFI Info
  */
 
-#define WLAN_SSID       "YOUR_SSID"
-#define WLAN_PASS       "YOUR_PASSWORD"
-#define WLAN_SECURITY   WLAN_SEC_WPA2
-
+const char WiFiSSID[]   = "YOUR_SSID";
+const char WiFiPSK[]    = "YOUR_PASSWORD";
 
 /*
  * Phant auth tokens
@@ -14,10 +12,8 @@
  * Manage URL: https://<PHANT_HOST>:<PHANT_PORT>/streams/<PHANT_PUBLIC_KEY>
  */
 
-#define PHANT_HOST "data.sparkfun.com"
-#define PHANT_PORT 80
+const char PhantHost[]  = "data.sparkfun.com";
+const int  PhantPort    = 80;
 
-#define PHANT_PUBLIC_KEY "YOUR_PUBLIC_KEY"
-#define PHANT_PRIVATE_KEY "YOUR_PRIVATE_KEY"
-#define PHANT_DELETE_KEY "YOUR_DELETE_KEY"
-
+const char PublicKey[]  = "YOUR_PUBLIC_KEY";
+const char PrivateKey[] = "YOUR_PRIVATE_KEY";
