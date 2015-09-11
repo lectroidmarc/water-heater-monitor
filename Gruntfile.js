@@ -77,6 +77,10 @@ module.exports = function(grunt) {
         files: ['<%= css_files %>'],
         tasks: ['cssmin']
       },
+      html: {
+        files: ['src/index.html'],
+        tasks: ['htmlmin']
+      },
       other: {
         options: {
           livereload: true,
@@ -101,8 +105,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-jsdoc');
 
-  grunt.registerTask('hintify', ['jshint:beforeconcat', 'concat:scripts', 'jshint:afterconcat']);
   grunt.registerTask('jsdist', ['hintify', 'uglify']);
-  grunt.registerTask('dist', ['jsdist', 'cssmin']);
+  grunt.registerTask('dist', ['jsdist', 'cssmin', 'htmlmin']);
+  grunt.registerTask('hintify', ['jshint:beforeconcat', 'concat', 'jshint:afterconcat']);
   grunt.registerTask('default', ['connect', 'watch']);
 };
