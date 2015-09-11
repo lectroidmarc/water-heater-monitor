@@ -2,7 +2,7 @@
  * Listens for serial data from an IMC Eagle solar water heater controller and
  * uploads it to a waiting server.
  *
- * Assumes a Sparkfun EST8266 Thing and a serial connection to an Eagle controller via hardware serial.
+ * Assumes a Sparkfun ESP8266 Thing and a serial connection to an Eagle controller via hardware serial.
  */
 
 #include <ESP8266WiFi.h>
@@ -27,7 +27,7 @@ void loop () {
   unsigned long now = millis();
 
   // If we haven't updated in 5 minutes, send along a "PING" to keep showing something.
-  if (now > lastWebUpdateTime + 300000 || now < lastWebUpdateTime) {
+  if (now > lastUpdateTime + 300000 || now < lastUpdateTime) {
     //strcpy(eagle_data, "0.05  120.0  110.0  12.0  159.0  100.0  110.0  ON  OFF  ");
     //postToPhant();
 
