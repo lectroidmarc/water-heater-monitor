@@ -114,7 +114,7 @@ void connectWiFi() {
 
 int postToPhant() {
   char *tokenptr;
-  
+
   // LED turns on when we enter, it'll go off when we
   // successfully post.
   digitalWrite(LED_PIN, HIGH);
