@@ -28,7 +28,7 @@ void loop () {
 
   // uncomment to send debug strings every minute
   if (now > lastUpdateTime + 60000 || now < lastUpdateTime) {
-    char fake_data[] = "0.05  120.0  110.0  12.0  159.0  100.0  110.0  ON  OFF  ";
+    char fake_data[] = "0:05  120.0  110.0  12.0  159.0  100.0  110.0  ON  OFF  ";
     data_index = sizeof(fake_data);
     strncpy(eagle_data, fake_data, data_index);
 
