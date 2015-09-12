@@ -21,21 +21,14 @@ DHT dht = DHT(0, DHT22);               // Pin 0, DHT 22 (AM2302)
 void setup () {
   initHardware();
   connectWiFi();
+
+  // debugging...
+  //strcpy(eagle_data, "0:05  120.0  110.0  12.0  159.0  100.0  110.0  ON  OFF  ");
+  //postToPhant();
 }
 
 void loop () {
   unsigned long now = millis();
-
-  // uncomment to send debug strings every minute
-  if (now > lastUpdateTime + 60000 || now < lastUpdateTime) {
-    char fake_data[] = "0:05  120.0  110.0  12.0  159.0  100.0  110.0  ON  OFF  ";
-    data_index = sizeof(fake_data);
-    strncpy(eagle_data, fake_data, data_index);
-
-    if (postToPhant()) {
-      lastUpdateTime = now;
-    }
-  }
 
   // If we haven't updated in 5 minutes, send along a "PING" to keep showing something.
   if (now > lastUpdateTime + 300000 || now < lastUpdateTime) {
@@ -140,7 +133,9 @@ int postToPhant() {
     phant.add("aux_2",   strtok_r(NULL, " ", &tokenptr));
     phant.add("pump",    strtok_r(NULL, " ", &tokenptr));
     phant.add("uplim",   strtok_r(NULL, " ", &tokenptr));
-    phant.add("fault",   strtok_r(NULL, " ", &tokenptr));
+
+    char *fault = strtok_r(NULL, " ", &tokenptr);
+    phant.add("fault", (fault == NULL) ? "" : fault);
   } else {
     phant.add("runtime", "0:00");
     phant.add("coll_t",  "");
