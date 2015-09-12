@@ -115,8 +115,6 @@ void connectWiFi() {
 }
 
 int postToPhant() {
-  char *tokenptr;
-
   // LED turns on when we enter, it'll go off when we
   // successfully post.
   digitalWrite(LED_PIN, HIGH);
@@ -125,6 +123,8 @@ int postToPhant() {
   Phant phant(PhantHost, PublicKey, PrivateKey);
 
   if (strlen(eagle_data) > 0) {
+    char *tokenptr;
+
     phant.add("runtime", strtok_r(eagle_data, " ", &tokenptr));
     phant.add("coll_t",  strtok_r(NULL, " ", &tokenptr));
     phant.add("stor_t",  strtok_r(NULL, " ", &tokenptr));
