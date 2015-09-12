@@ -42,9 +42,7 @@ void loop () {
   // defined outside of the sketch. These tasks include
   // setting up, and maintaining, a WiFi connection.
   delay(100);
-}
 
-void serialEvent() {
   while (Serial.available()) {
     char c = Serial.read();
 
