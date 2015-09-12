@@ -1,6 +1,6 @@
 /**
  * @file Contains the Phant class.
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 /**
@@ -18,7 +18,7 @@ var Phant = function (settings) {
  * Fetches data from a Phant server.
  * @param {Object} params - An object contaning phant parameters.
  * @param {Phant~requestCallback} callback - A callback to call after the Phant call is done.
- * @param {Phant~requestCallback} callback - A callback to call if there is an error.
+ * @param {Phant~requestCallback} [callback] - A callback to call if there is an error.
  */
 Phant.prototype.fetch = function (params, callback, errorCallback) {
   var self = this;
