@@ -16,7 +16,7 @@ unsigned long lastUpdateTime = 0;
 char eagle_data[81];
 uint8_t data_index = 0;
 
-DHT dht = DHT(4, DHT22);               // Pin 4, DHT 22 (AM2302)
+DHT dht = DHT(0, DHT22);               // Pin 0, DHT 22 (AM2302)
 
 void setup () {
   initHardware();
