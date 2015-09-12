@@ -33,7 +33,9 @@ void loop () {
 
     data_index = 0;
     eagle_data[data_index] = '\0';
-    postToPhant();
+    if (postToPhant()) {
+      lastUpdateTime = now;
+    }
   }
 
   // Delays allow the ESP8266 to perform critical tasks
@@ -57,7 +59,9 @@ void serialEvent() {
       unsigned long now = millis();
 
       if ((now > lastUpdateTime + 60000 || now < lastUpdateTime) && strncmp(eagle_data, "RUNTIME", 7) != 0 && strchr(eagle_data, ':') != NULL) {
-        postToPhant();
+        if (postToPhant()) {
+          lastUpdateTime = now;
+        }
       }
 
       // Reset the data
@@ -135,9 +139,17 @@ int postToPhant() {
     phant.add("fault",   strtok_r(NULL, " ", &tokenptr));
   } else {
     phant.add("runtime", "0:00");
+    phant.add("coll_t",  "");
+    phant.add("stor_t",  "");
+    phant.add("diff_t",  "");
+    phant.add("hili_t",  "");
+    phant.add("aux_1",   "");
+    phant.add("aux_2",   "");
     phant.add("pump",    "OFF");
     phant.add("uplim",   "OFF");
+    phant.add("fault",   "");
   }
+
   phant.add("ambient_t", dht.readTemperature(true));
 
   // Now connect to data.sparkfun.com, and post our data:
