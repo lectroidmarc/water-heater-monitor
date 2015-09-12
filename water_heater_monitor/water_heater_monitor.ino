@@ -26,13 +26,23 @@ void setup () {
 void loop () {
   unsigned long now = millis();
 
+  // uncomment to send debug strings every minute
+  if (now > lastUpdateTime + 60000 || now < lastUpdateTime) {
+    char fake_data[] = "0.05  120.0  110.0  12.0  159.0  100.0  110.0  ON  OFF  ";
+    data_index = sizeof(fake_data);
+    strncpy(eagle_data, fake_data, data_index);
+
+    if (postToPhant()) {
+      lastUpdateTime = now;
+    }
+  }
+
   // If we haven't updated in 5 minutes, send along a "PING" to keep showing something.
   if (now > lastUpdateTime + 300000 || now < lastUpdateTime) {
-    //strcpy(eagle_data, "0.05  120.0  110.0  12.0  159.0  100.0  110.0  ON  OFF  ");
-    //postToPhant();
-
+    // Reset the data to send a blank "ping"
     data_index = 0;
     eagle_data[data_index] = '\0';
+
     if (postToPhant()) {
       lastUpdateTime = now;
     }
@@ -61,10 +71,6 @@ void loop () {
           lastUpdateTime = now;
         }
       }
-
-      // Reset the data
-      data_index = 0;
-      eagle_data[data_index] = '\0';
     } else if (c != '\r') {
       // Capture everything else (but not a CR)
       if (data_index < 80) {
@@ -149,6 +155,10 @@ int postToPhant() {
   }
 
   phant.add("ambient_t", dht.readTemperature(true));
+
+  // Reset the eagle_data regardless of a successful send or not
+  data_index = 0;
+  eagle_data[data_index] = '\0';
 
   // Now connect to data.sparkfun.com, and post our data:
   WiFiClient client;
