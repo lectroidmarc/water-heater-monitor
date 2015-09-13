@@ -34,7 +34,7 @@ var init_phant = function () {
 
 var init_weather = function () {
   var saved_wu_settings = JSON.parse(window.localStorage.getItem('wu_settings'));
-  if (saved_wu_settings) {
+  if (saved_wu_settings && saved_wu_settings.api_key && saved_wu_settings.location) {
     $('#wu_api_key').val(saved_wu_settings.api_key);
     $('#wu_location').val(saved_wu_settings.location);
 
