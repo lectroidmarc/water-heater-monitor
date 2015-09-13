@@ -25,6 +25,8 @@ void setup () {
   // debugging...
   //strcpy(eagle_data, "0:05  120.0  110.0  12.0  159.0  100.0  110.0  ON  OFF  ");
   //postToPhant();
+  //data_index = 0;
+  //eagle_data[data_index] = '\0';
 }
 
 void loop () {
@@ -41,11 +43,6 @@ void loop () {
     }
   }
 
-  // Delays allow the ESP8266 to perform critical tasks
-  // defined outside of the sketch. These tasks include
-  // setting up, and maintaining, a WiFi connection.
-  delay(100);
-
   while (Serial.available()) {
     char c = Serial.read();
 
@@ -59,11 +56,15 @@ void loop () {
 
       unsigned long now = millis();
 
-      if ((now > lastUpdateTime + 60000 || now < lastUpdateTime) && strncmp(eagle_data, "RUNTIME", 7) != 0 && strchr(eagle_data, ':') != NULL) {
+      if ((now > lastUpdateTime + 60000 || now < lastUpdateTime) && strncmp(eagle_data, "RUNTIME", 7) != 0 && (eagle_data[1] == ':' || eagle_data[2] == ':')) {
         if (postToPhant()) {
           lastUpdateTime = now;
         }
       }
+
+      // Reset the data.  Hitting an LF should always do this, succesful send or not
+      data_index = 0;
+      eagle_data[data_index] = '\0';
     } else if (c != '\r') {
       // Capture everything else (but not a CR)
       if (data_index < 80) {
@@ -74,6 +75,8 @@ void loop () {
       }
       eagle_data[data_index] = '\0';
     }
+
+    yield();    // Yeild to the ESP8266 here, just in case
   }
 }
 
@@ -150,10 +153,6 @@ int postToPhant() {
   }
 
   phant.add("ambient_t", dht.readTemperature(true));
-
-  // Reset the eagle_data regardless of a successful send or not
-  data_index = 0;
-  eagle_data[data_index] = '\0';
 
   // Now connect to data.sparkfun.com, and post our data:
   WiFiClient client;
