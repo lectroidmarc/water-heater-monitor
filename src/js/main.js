@@ -26,7 +26,6 @@ var init_phant = function () {
       //'gte[timestamp]': 't - 12h'
       page: '1'
     }, onPhantFetch, onPhantError);
-    phant.getStats(onPhantStats);
   } else {
     $('#tabs a:last').tab('show');
   }
@@ -78,6 +77,8 @@ var onSettingsSubmit = function (e) {
 
 var onPhantFetch = function (data) {
   //console.log(data);
+
+  phant.getStats(onPhantStats);
 
   if (data.message) {
     $('.status').hide();
