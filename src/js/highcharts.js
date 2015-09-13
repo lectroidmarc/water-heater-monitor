@@ -12,7 +12,7 @@ var makeTempGauges = function (current) {
   makeTempGauge('#aux_2_g', (current.aux_2 !== '') ? parseFloat(current.aux_2) : 0, 'Water Temperature');
   makeTempGauge('#stor_t_g', (current.stor_t !== '') ? parseFloat(current.stor_t) : 0, 'Storage Temperature');
   makeTempGauge('#coll_t_g', (current.coll_t !== '') ? parseFloat(current.coll_t) : 0, 'Collector Temperature', 250);
-  makeTempGauge('#ambient_t_g', parseFloat(current.ambient_t), 'Ambient Temperature', 140);
+  makeTempGauge('#ambient_t_g', parseFloat(current.ambient_t.replace(/\s+/, '')), 'Ambient Temperature', 140);
 };
 
 var makeTempGauge = function (element, value, title, max) {
@@ -198,7 +198,7 @@ var makeGraph = function (element, data) {
 
     for (var x = data.length - 1; x >= 0; x--) {
       var timestamp = Date.parse(data[x].timestamp);
-      var number = parseFloat(data[x][key]);
+      var number = parseFloat(data[x][key].replace(/\s+/, ''));
 
       if (key === 'pump' || key === 'uplim') {
         number = (data[x][key] === 'ON') ? 1 : 0;
@@ -254,7 +254,7 @@ var updateGraph = function (element, data) {
 
   function getDataAndTimestamp (key, index) {
     var timestamp = Date.parse(data[index].timestamp);
-    var number = parseFloat(data[index][key]);
+    var number = parseFloat(data[index][key].replace(/\s+/, ''));
 
     return [
       timestamp,
