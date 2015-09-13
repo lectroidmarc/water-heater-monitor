@@ -23,7 +23,8 @@ var init_phant = function () {
 
     phant = new Phant(saved_phant_settings);
     phant.fetch({
-      'gte[timestamp]': 't - 12h'
+      //'gte[timestamp]': 't - 12h'
+      page: '1'
     }, onPhantFetch, onPhantError);
     phant.getStats(onPhantStats);
   } else {
@@ -84,11 +85,15 @@ var onPhantFetch = function (data) {
     $('.status.unknown').show();
   } else {
     if (data.length > 0) {
-      var current = data[0];
+      var cleanData = data.filter(function (reading) {
+        return reading.runtime.indexOf(':') !== -1;
+      });
+
+      var current = cleanData[0];
 
       showStatus(current);
       makeTempGauges(current);
-      makeGraph('#plot', data);
+      makeGraph('#plot', cleanData);
 
       //phant.enableRealtime(onPhantRealtime);
       phant.startPolling({}, onPhantPolled);
