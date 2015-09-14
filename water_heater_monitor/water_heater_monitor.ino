@@ -152,7 +152,11 @@ int postToPhant() {
     phant.add("fault",   "");
   }
 
-  phant.add("ambient_t", dht.readTemperature(true));
+  // Phant float support uses dtostrf() internally which seems to add
+  // a space or two in front of the decimal point.  It also defaults to
+  // 4 places but the DST only needs 2.  Use of String() avoids both issues.
+  float temp_f = dht.readTemperature(true);
+  phant.add("ambient_t", String(temp_f, 2));
 
   // Now connect to data.sparkfun.com, and post our data:
   WiFiClient client;
