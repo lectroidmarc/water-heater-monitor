@@ -1,6 +1,6 @@
 Water Heater Monitor
 ----
-This code uses an Arduino to fetch sensor data from a solar water heater and then puts it somewhere online so we can make pretty graphs from it.
+This code uses an Arduino to fetch sensor data from a solar water heater and then put it all somewhere online so we can make pretty graphs from it.
 
 ##### The Solar Water Heater
 
@@ -8,7 +8,7 @@ The water heater is managed by an [IMC Instruments](http://www.solar.imcinstrume
 
 ##### The Arduino
 
-In my case an [Arduino UNO](http://arduino.cc/en/Main/ArduinoBoardUno) with an [Adafruit CC3000 WiFi Shield](https://www.adafruit.com/products/1491) listens to the data port via a [Sparkfun RS232 Shifter](https://www.sparkfun.com/products/449).
+In my case an [SparkFun ESP8266 Thing](https://www.sparkfun.com/products/13231) listens to the Eagle's data port via a [Sparkfun RS232 Shifter](https://www.sparkfun.com/products/449).
 
 ##### The Data Store
 
