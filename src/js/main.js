@@ -21,6 +21,8 @@ var init_phant = function () {
     $('#phant_url').val(saved_phant_settings.url);
     $('#phant_public_key').val(saved_phant_settings.public_key);
 
+    showAlert('Loading...', {faClass: 'refresh', faSpin: true});
+
     phant = new Phant(saved_phant_settings);
     phant.fetch({
       //'gte[timestamp]': 't - 12h'
@@ -81,9 +83,7 @@ var onPhantFetch = function (data) {
   phant.getStats(onPhantStats);
 
   if (data.message) {
-    $('.status').hide();
-    $('#error_message').text(data.message);
-    $('.status.unknown').show();
+    showAlert(data.message, { alertClass: 'danger', faClass: 'warning' });
   } else {
     if (data.length > 0) {
       var cleanData = data.filter(function (reading) {
@@ -99,14 +99,13 @@ var onPhantFetch = function (data) {
       //phant.enableRealtime(onPhantRealtime);
       phant.startPolling({}, onPhantPolled);
     } else {
-      $('.status').hide();
+      clearAlerts();
     }
   }
 };
 
 var onPhantError = function (req) {
-  $('.status').hide();
-  $('.status.unknown').show();
+  showAlert('A network error occured', { alertClass: 'danger', faClass: 'warning' });
 };
 
 //var onPhantRealtime = function (data) {
@@ -147,19 +146,17 @@ var showStatus = function (current) {
   var out_of_date = (Date.now() - last_update_timestamp > 11 * 60 * 1000) ? true : false; // max 10 minute interval
   var system_is_off = (current.coll_t === '' && current.stor_t === '' && current.aux_1 === '' && current.aux_2 === '') ? true : false;
 
-  $('.status').hide();
   if (out_of_date) {
     var last_update = new Date(last_update_timestamp);
-    $('#last_update_time').text(last_update.toLocaleString());
-    $('.status.outofdate').show();
+    showAlert('Monitor appears offline.  Last update at <strong>' + last_update.toLocaleString() + '</strong>', { alertClass: 'danger', faClass: 'warning' });
   } else if (system_is_off) {
-    $('.status.systemoff').show();
+    showAlert('System is OFF', { alertClass: 'gray', faClass: 'power-off' });
   } else if (current.uplim === 'ON') {
-    $('.status.uplim').show();
+    showAlert('High Limit hit', { alertClass: 'warning', faClass: 'warning' });
   } else if (current.pump === 'ON') {
-    $('.status.pumpon').show();
+    showAlert('Pump is ON', { alertClass: 'success', faClass: 'check' });
   } else {
-    $('.status.pumpoff').show();
+    showAlert('Pump is OFF', { alertClass: 'info', faClass: 'power-off' });
   }
 
   if (system_is_off) {
@@ -167,6 +164,34 @@ var showStatus = function (current) {
   } else {
     $('.hidden-xs-systemoff').removeClass('off');
   }
+};
+
+var showAlert = function (message, opts) {
+  clearAlerts();
+
+  if (typeof opts === 'undefined') { opts = {}; }
+
+  var alert = $('<div/>').addClass('status alert alert-' + (opts.alertClass || 'info')).appendTo('#alerts');
+  if (opts.glyphiconClass || opts.faClass) {
+    var icon = $('<span/>').attr('aria-hidden', 'true').appendTo(alert);
+
+    if (opts.glyphiconClass) {
+      icon.addClass('glyphicon glyphicon-' + opts.glyphiconClass);
+    }
+    if (opts.faClass) {
+      icon.addClass('fa fa-' + opts.faClass);
+    }
+    if (opts.faSpin) {
+      icon.addClass('fa-spin');
+    }
+  }
+  $('<span/>').addClass('text').html(message).appendTo(alert);
+
+  return alert;
+};
+
+var clearAlerts = function () {
+  $('#alerts .status').remove();
 };
 
 var onWeatherConditions = function (data) {

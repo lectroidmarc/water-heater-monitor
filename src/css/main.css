@@ -10,12 +10,11 @@
 }
 
 .status {
-  display: none;
   margin-top: 10px;
   padding: 8px 15px;
 }
-.status.loading {
-  display: inherit;
+.status .glyphicon, .status .fa {
+  margin-right: 5px;
 }
 
 .gauge {
