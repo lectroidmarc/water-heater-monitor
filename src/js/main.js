@@ -206,9 +206,25 @@ var onWeatherConditions = function (data) {
     var icon_url = data.current_observation.icon_url;
     var nt = (icon_url.indexOf('nt_' + icon + '.') !== -1) ? 'nt_' : '';
 
-    $('#weather').attr('href', forecast_url).attr('title', 'Currently: ' + weather + ', ' + temp_f + '°');
-    $('#weather .weather-icon').removeClass().addClass('weather-icon ' + nt + icon);
-    $('#weather .temp').text(temp_f + '°');
+    var weather_dom = $('#weather');
+
+    if (weather_dom.length === 0) {
+      weather_dom = $('<div/>').attr({
+        id: 'weather',
+        target: 'weather',
+        href: forecast_url,
+        title: 'Currently: ' + weather + ', ' + temp_f + '°'
+      }).prependTo('#header');
+      $('<div/>').addClass('weather-icon ' + nt + icon).appendTo(weather_dom);
+      $('<div/>').addClass('temp').text(temp_f + '°').appendTo(weather_dom);
+    } else {
+      weather_dom.attr({
+        href: forecast_url,
+        title: 'Currently: ' + weather + ', ' + temp_f + '°'
+      });
+      weather_dom.find('.weather-icon').removeClass().addClass('weather-icon ' + nt + icon);
+      weather_dom.find('.temp').text(temp_f + '°').appendTo(weather_dom);
+    }
   }
 };
 
