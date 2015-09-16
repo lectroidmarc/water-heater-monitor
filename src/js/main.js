@@ -209,7 +209,7 @@ var onWeatherConditions = function (data) {
     var weather_dom = $('#weather');
 
     if (weather_dom.length === 0) {
-      weather_dom = $('<div/>').attr({
+      weather_dom = $('<a/>').attr({
         id: 'weather',
         target: 'weather',
         href: forecast_url,
