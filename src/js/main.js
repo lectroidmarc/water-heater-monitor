@@ -4,6 +4,7 @@
  */
 
 var phant;
+var page;
 var wu;
 
 var init = function () {
@@ -24,9 +25,9 @@ var init_phant = function () {
     showAlert('Loading...', {faClass: 'refresh', faSpin: true});
 
     phant = new Phant(saved_phant_settings);
+    page = 1;
     phant.fetch({
-      //'gte[timestamp]': 't - 12h'
-      page: '1'
+      page: page
     }, onPhantFetch, onPhantError);
   } else {
     $('#tabs a:last').tab('show');
@@ -44,6 +45,24 @@ var init_weather = function () {
       location: saved_wu_settings.location
     });
     wu.conditions(onWeatherConditions);
+  }
+};
+
+var phantPage = function () {
+  phant.fetch({
+    page: page
+  }, onPhantPage, onPhantError);
+};
+
+var pageBack = function () {
+  page++;
+  phantPage();
+};
+
+var pageForward = function () {
+  if (page > 1) {
+    page--;
+    phantPage();
   }
 };
 
@@ -104,6 +123,18 @@ var onPhantFetch = function (data) {
   }
 };
 
+var onPhantPage = function (data) {
+  if (data.message) {
+    showAlert(data.message, { alertClass: 'danger', faClass: 'warning' });
+  } else {
+    var cleanData = data.filter(function (reading) {
+      return reading.runtime.indexOf(':') !== -1;
+    });
+
+    makeGraph('#plot', cleanData);
+  }
+};
+
 var onPhantError = function (req) {
   showAlert('A network error occured', { alertClass: 'danger', faClass: 'warning' });
 };
@@ -116,13 +147,16 @@ var onPhantPolled = function (data) {
   //console.log(data);
 
   if (data.message) {
-    console.warn(data.message);
+    showAlert(data.message, { alertClass: 'danger', faClass: 'warning' });
   } else if (data.length > 0) {
     var current = data[0];
 
     showStatus(current);
     makeTempGauges(current);
-    updateGraph('#plot', data);
+
+    if (page === 1) {
+      updateGraph('#plot', data);
+    }
 
     if (wu) {
       wu.conditions(onWeatherConditions);
