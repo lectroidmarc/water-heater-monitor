@@ -11,6 +11,9 @@ var init = function () {
   $('a[data-toggle="tab"]').on('shown.bs.tab', onTabChange);
   $('#settings form').on('submit', onSettingsSubmit);
 
+  $('.previous').on('click', onPageBack);
+  $('.next').on('click', onPageForward);
+
   init_phant();
   init_weather();
 };
@@ -48,21 +51,26 @@ var init_weather = function () {
   }
 };
 
-var phantPage = function () {
+var onPageBack = function (e) {
+  e.preventDefault();
+  $('.pager li').addClass('disabled');
+
+  page++;
   phant.fetch({
     page: page
   }, onPhantPage, onPhantError);
 };
 
-var pageBack = function () {
-  page++;
-  phantPage();
-};
+var onPageForward = function (e) {
+  e.preventDefault();
 
-var pageForward = function () {
   if (page > 1) {
+    $('.pager li').addClass('disabled');
+
     page--;
-    phantPage();
+    phant.fetch({
+      page: page
+    }, onPhantPage, onPhantError);
   }
 };
 
@@ -124,6 +132,10 @@ var onPhantFetch = function (data) {
 };
 
 var onPhantPage = function (data) {
+  $('.pager li > a').blur();
+  $('.pager li').removeClass('disabled');
+  $('.pager .next').toggleClass('disabled', page === 1);
+
   if (data.message) {
     showAlert(data.message, { alertClass: 'danger', faClass: 'warning' });
   } else {
