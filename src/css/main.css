@@ -31,6 +31,10 @@
   margin-top: 10px;
 }
 
+.pager {
+  display: none;
+}
+
 .stats {
   margin-top: 20px;
 }

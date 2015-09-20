@@ -113,6 +113,8 @@ var onPhantFetch = function (data) {
     showAlert(data.message, { alertClass: 'danger', faClass: 'warning' });
   } else {
     if (data.length > 0) {
+      $('.pager').show();
+
       var cleanData = data.filter(function (reading) {
         return reading.runtime.indexOf(':') !== -1;
       });
