@@ -115,15 +115,13 @@ var onPhantFetch = function (data) {
     if (data.length > 0) {
       $('.pager').show();
 
-      var cleanData = data.filter(function (reading) {
-        return reading.runtime.indexOf(':') !== -1;
-      });
-
-      var current = cleanData[0];
+      var cleanData = data.filter(filterTempData);
+      var sortData = cleanData.sort(sortTempData);
+      var current = sortData[0];
 
       showStatus(current);
       makeTempGauges(current);
-      makeGraph('#plot', cleanData);
+      makeGraph('#plot', sortData);
 
       //phant.enableRealtime(onPhantRealtime);
       phant.startPolling({}, onPhantPolled);
@@ -141,11 +139,10 @@ var onPhantPage = function (data) {
   if (data.message) {
     showAlert(data.message, { alertClass: 'danger', faClass: 'warning' });
   } else {
-    var cleanData = data.filter(function (reading) {
-      return reading.runtime.indexOf(':') !== -1;
-    });
+    var cleanData = data.filter(filterTempData);
+    var sortData = cleanData.sort(sortTempData);
 
-    makeGraph('#plot', cleanData);
+    makeGraph('#plot', sortData);
   }
 };
 
@@ -240,6 +237,19 @@ var showAlert = function (message, opts) {
 
 var clearAlerts = function () {
   $('#alerts .status').remove();
+};
+
+var filterTempData = function (reading) {
+  return reading.runtime.indexOf(':') !== -1;
+};
+
+var sortTempData = function (a, b) {
+  var at = Date.parse(a.timestamp);
+  var bt = Date.parse(b.timestamp);
+
+  if (at > bt) { return -1; }
+  if (at < bt) { return 1; }
+  return 0;
 };
 
 var onWeatherConditions = function (data) {
