@@ -2,6 +2,10 @@
  *
  */
 
+.page-header {
+  margin-top: 30px;
+}
+
 .formbox {
   border: 1px solid #ccc;
   border-radius: 4px;

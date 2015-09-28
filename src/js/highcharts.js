@@ -56,7 +56,7 @@ var makeTempGauge = function (element, value, title, max) {
       stops: [
         [0.3, '#00ccff'],  // pale blue
         [0.5, '#cccc00'],  // yellow greenish
-        [0.7, '#ffcc00'],   // orangeish
+        [0.7, '#ffcc00'],  // orangeish
         [0.9, '#ff3300']   // redish
       ],
       lineWidth: 0,
@@ -64,6 +64,9 @@ var makeTempGauge = function (element, value, title, max) {
       tickPositions: [0, max],
       tickWidth: 0,
       title: {
+        style: {
+          fontSize: '14px'
+        },
         text: title,
         y: -70
       },
