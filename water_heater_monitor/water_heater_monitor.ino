@@ -18,68 +18,6 @@ uint8_t data_index = 0;
 
 DHT dht = DHT(0, DHT22);               // Pin 0, DHT 22 (AM2302)
 
-void setup () {
-  initHardware();
-  connectWiFi();
-
-  // debugging...
-  //strcpy(eagle_data, "0:05  120.0  110.0  12.0  159.0  100.0  110.0  ON  OFF  ");
-  //postToPhant();
-  //data_index = 0;
-  //eagle_data[data_index] = '\0';
-}
-
-void loop () {
-  unsigned long now = millis();
-
-  // If we haven't updated in 5 minutes, send along a "PING" to keep showing something.
-  if (now > lastUpdateTime + 300000 || now < lastUpdateTime) {
-    // Reset the data to send a blank "ping"
-    data_index = 0;
-    eagle_data[data_index] = '\0';
-
-    if (postToPhant()) {
-      lastUpdateTime = now;
-    }
-  }
-
-  while (Serial.available()) {
-    char c = Serial.read();
-
-    // Assume a LF is the end of the line
-    if (c == '\n' && strlen(eagle_data) > 0) {
-      // Update once per minute
-      //
-      // Don't send any Eagle header messages we come across.  Also, make sure
-      // there's a : character in the string. It's always the 2nd or 3rd
-      // character so it goes a long way in assuming we have a full set of data.
-
-      unsigned long now = millis();
-
-      if ((now > lastUpdateTime + 60000 || now < lastUpdateTime) && strncmp(eagle_data, "RUNTIME", 7) != 0 && (eagle_data[1] == ':' || eagle_data[2] == ':')) {
-        if (postToPhant()) {
-          lastUpdateTime = now;
-        }
-      }
-
-      // Reset the data.  Hitting an LF should always do this, succesful send or not
-      data_index = 0;
-      eagle_data[data_index] = '\0';
-    } else if (c != '\r') {
-      // Capture everything else (but not a CR)
-      if (data_index < 80) {
-        eagle_data[data_index++] = c;
-      } else {
-        // This case should never happen, but avoid the overrun just the same :)
-        data_index = 0;
-      }
-      eagle_data[data_index] = '\0';
-    }
-
-    yield();    // Yeild to the ESP8266 here, just in case
-  }
-}
-
 void initHardware() {
   Serial.begin(2400);
   pinMode(LED_PIN, OUTPUT);
@@ -173,5 +111,67 @@ int postToPhant() {
   // Before we exit, turn the LED off.
   digitalWrite(LED_PIN, LOW);
   return 1; // Return success
+}
+
+void setup () {
+  initHardware();
+  connectWiFi();
+
+  // debugging...
+  //strcpy(eagle_data, "0:05  120.0  110.0  12.0  159.0  100.0  110.0  ON  OFF  ");
+  //postToPhant();
+  //data_index = 0;
+  //eagle_data[data_index] = '\0';
+}
+
+void loop () {
+  unsigned long now = millis();
+
+  // If we haven't updated in 5 minutes, send along a "PING" to keep showing something.
+  if (now > lastUpdateTime + 300000 || now < lastUpdateTime) {
+    // Reset the data to send a blank "ping"
+    data_index = 0;
+    eagle_data[data_index] = '\0';
+
+    if (postToPhant()) {
+      lastUpdateTime = now;
+    }
+  }
+
+  while (Serial.available()) {
+    char c = Serial.read();
+
+    // Assume a LF is the end of the line
+    if (c == '\n' && strlen(eagle_data) > 0) {
+      // Update once per minute
+      //
+      // Don't send any Eagle header messages we come across.  Also, make sure
+      // there's a : character in the string. It's always the 2nd or 3rd
+      // character so it goes a long way in assuming we have a full set of data.
+
+      unsigned long now = millis();
+
+      if ((now > lastUpdateTime + 60000 || now < lastUpdateTime) && strncmp(eagle_data, "RUNTIME", 7) != 0 && (eagle_data[1] == ':' || eagle_data[2] == ':')) {
+        if (postToPhant()) {
+          lastUpdateTime = now;
+        }
+      }
+
+      // Reset the data.  Hitting an LF should always do this, succesful send or not
+      data_index = 0;
+      eagle_data[data_index] = '\0';
+    } else if (c != '\r') {
+      // Capture everything else (but not a CR)
+      if (data_index < 80) {
+        eagle_data[data_index++] = c;
+      } else {
+        // This case should never happen, but avoid the overrun just the same :)
+        data_index = 0;
+      }
+      eagle_data[data_index] = '\0';
+    }
+
+    yield();    // Yeild to the ESP8266 here, just in case
+  }
 }
 
