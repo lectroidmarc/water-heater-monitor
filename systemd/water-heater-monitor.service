@@ -1,0 +1,10 @@
+[Service]
+ExecStart=/usr/local/bin/node /home/pi/water-heater-monitor/app.js
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=water-heater-monitor
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

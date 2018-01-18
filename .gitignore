@@ -1,5 +1,2 @@
-keys.h
-build/
-jsdoc/
+config.json
 node_modules/
-npm-debug.log

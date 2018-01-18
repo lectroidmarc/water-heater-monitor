@@ -1,0 +1,13 @@
+{
+  "updateInterval": 60000,
+  "pingInterval": 300000,
+  "AIO":{
+    "User":"<your AIO Username here>",
+    "Key":"<your AIO Key here>"
+  },
+  "DHT":{
+    "type": 22,
+    "pin": 4
+  },
+  "serialport":"/dev/ttyUSB0"
+}

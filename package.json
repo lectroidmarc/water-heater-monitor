@@ -1,0 +1,15 @@
+{
+  "name": "water-heater-monitor",
+  "version": "2.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marc Matteo <marcm@lectroid.net>",
+  "license": "ISC",
+  "dependencies": {
+    "node-dht-sensor": "^0.0.33",
+    "serialport": "^6.0.0"
+  }
+  }
