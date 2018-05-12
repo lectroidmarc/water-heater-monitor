@@ -57,6 +57,8 @@ parser.on('data', line => {
           'fault': fault || 'OK'
         };
 
+        temperatureData.cpu = ctof(getCPUTemp()).toFixed(1);
+
         sensor.read(config.DHT.type, config.DHT.pin, (err, temperature, humidity) => {
           if (!err) {
             temperatureData.ambient = ctof(temperature).toFixed(1);
@@ -77,18 +79,28 @@ parser.on('data', line => {
 // night, but we can still send ambient temps to AIO.
 setInterval(() => {
   if (Date.now() > lastUpdateTime + config.pingInterval) {
+    let temperatureData = {};
+
+    temperatureData.cpu = ctof(getCPUTemp()).toFixed(1);
+
     sensor.read(config.DHT.type, config.DHT.pin, (err, temperature, humidity) => {
       if (!err) {
-        aio.updateFeed('water-heater-monitor.ambient', ctof(temperature).toFixed(1), (err, res) => {
-          if (err) {
-            console.warn(err);
-          }
-        });
+        temperatureData.ambient = ctof(temperature).toFixed(1);
       }
+      aio.updateGroup('water-heater-monitor', temperatureData, (err, res) => {
+        if (err) {
+          console.warn(err);
+        }
+      });
     });
   }
 }, config.pingInterval);
 
 function ctof (temp) {
   return temp * 9 / 5 + 32;
+}
+
+// Get CPU Temp on a Raspberry Pi
+function getCPUTemp () {
+  return require('fs').readFileSync('/sys/class/thermal/thermal_zone0/temp') / 1000;
 }

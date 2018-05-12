@@ -20,6 +20,6 @@ Note that this requires [node-dht-sensor](https://github.com/momenso/node-dht-se
 
 Once upon a time I used Sparkfun's data service, but that went away.  So now I use [Adafruit IO](https://io.adafruit.com/) which provides a huge number of features, including built-in dashboards.
 
-The data on Adafruit IO is updated once per minute.  There are 5 temperature feeds for **Collector Temperature** (coll-t), **Storage Temperature** (stor-t), **Water Temperature** (aux-2), **Coolant Return Temperature** (aux-1) and **Ambient Temperature** (ambient).  Additionally there are 3 status feeds for **Pump Status** (pump), **Upper Limit Status** (uplim) and **Fault Status** (fault).
+The data on Adafruit IO is updated once per minute.  There are 5 temperature feeds for **Collector Temperature** (coll-t), **Storage Temperature** (stor-t), **Water Temperature** (aux-2), **Coolant Return Temperature** (aux-1), **Ambient Temperature** (ambient) and **CPU Temp** (cpu).  Additionally there are 3 status feeds for **Pump Status** (pump), **Upper Limit Status** (uplim) and **Fault Status** (fault).
 
 -30-
