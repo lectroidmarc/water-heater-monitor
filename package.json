@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "node-dht-sensor": "^0.0.33",
-    "serialport": "^6.0.0"
+    "serialport": "^6.2.2"
   }
-  }
+}
