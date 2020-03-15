@@ -2,7 +2,7 @@
   "name": "water-heater-monitor",
   "version": "2.0.0",
   "description": "",
-  "respository": "https://github.com/lectroidmarc/water-heater-monitor",
+  "repository": "https://github.com/lectroidmarc/water-heater-monitor",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "node-dht-sensor": "^0.4.0",
-    "serialport": "^6.2.2"
+    "serialport": "^6.2.2",
+    "minimist": ">=1.2.2"
   }
 }
