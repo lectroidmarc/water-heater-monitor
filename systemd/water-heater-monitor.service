@@ -1,5 +1,5 @@
 [Service]
-ExecStart=/usr/local/bin/node /home/pi/water-heater-monitor/app.js
+ExecStart=node /home/pi/water-heater-monitor/app.js
 Restart=always
 StandardOutput=syslog
 StandardError=syslog
